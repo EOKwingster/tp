@@ -46,10 +46,9 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
-import seedu.address.model.tag.AbstractTag;
 import seedu.address.model.person.Role;
 import seedu.address.model.person.Username;
-import seedu.address.model.tag.Tag;
+import seedu.address.model.tag.AbstractTag;
 import seedu.address.testutil.PersonBuilder;
 
 public class AddCommandParserTest {
