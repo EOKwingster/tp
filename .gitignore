@@ -3,7 +3,7 @@
 /build/
 src/main/resources/docs/
 bin
-
+/.claude/
 # IDEA files
 /.idea/
 /out/

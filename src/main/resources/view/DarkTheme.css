@@ -132,6 +132,12 @@
     -fx-text-fill: #010504;
 }
 
+.role_label {
+    -fx-text-fill: #00cc00;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-size: 16px;
+}
+
 .stack-pane {
      -fx-background-color: derive(#1d1d1d, 20%);
 }

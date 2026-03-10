@@ -22,18 +22,20 @@ public class Person {
     private final Email email;
 
     // Data fields
-    private final Address address;
+    private final Username username;
+    private final Role role;
     private final Set<Tag> tags = new HashSet<>();
 
     /**
      * Every field must be present and not null.
      */
-    public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
-        requireAllNonNull(name, phone, email, address, tags);
+    public Person(Name name, Phone phone, Email email, Username username, Role role, Set<Tag> tags) {
+        requireAllNonNull(name, phone, email, username, role, tags);
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.address = address;
+        this.username = username;
+        this.role = role;
         this.tags.addAll(tags);
     }
 
@@ -49,8 +51,12 @@ public class Person {
         return email;
     }
 
-    public Address getAddress() {
-        return address;
+    public Username getUsername() {
+        return username;
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     /**
@@ -93,14 +99,15 @@ public class Person {
         return name.equals(otherPerson.name)
                 && phone.equals(otherPerson.phone)
                 && email.equals(otherPerson.email)
-                && address.equals(otherPerson.address)
+                && username.equals(otherPerson.username)
+                && role.equals(otherPerson.role)
                 && tags.equals(otherPerson.tags);
     }
 
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, address, tags);
+        return Objects.hash(name, phone, email, username, role, tags);
     }
 
     @Override
@@ -109,7 +116,8 @@ public class Person {
                 .add("name", name)
                 .add("phone", phone)
                 .add("email", email)
-                .add("address", address)
+                .add("username", username)
+                .add("role", role)
                 .add("tags", tags)
                 .toString();
     }
