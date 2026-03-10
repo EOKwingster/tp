@@ -1,11 +1,13 @@
 package seedu.address.model.person;
 
+import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.tag.Tag;
@@ -17,13 +19,13 @@ import seedu.address.model.tag.Tag;
 public class Person {
 
     // Identity fields
-    private final Name name;
-    private final Phone phone;
-    private final Email email;
+    protected Name name;
+    protected Phone phone;
+    protected Email email;
 
     // Data fields
-    private final Address address;
-    private final Set<Tag> tags = new HashSet<>();
+    protected Address address;
+    protected Set<Tag> tags = new HashSet<>();
 
     /**
      * Every field must be present and not null.
@@ -112,6 +114,23 @@ public class Person {
                 .add("address", address)
                 .add("tags", tags)
                 .toString();
+    }
+
+    /**
+     * Creates a temporarily mutable copy of this Person, allowing modification
+     * through a delegate function. This is useful for operations that
+     * require temporary mutability (e.g., editing) before finalizing the object.
+     *
+     * @param delegate A consumer that receives the mutable copy and can modify it
+     * @return An immutable Person instance that has been modified by the delegate.
+     * @throws NullPointerException if the delegate is null.
+     */
+    public Person cloneInto(Consumer<MutablePerson> delegate) {
+        requireNonNull(delegate);
+        var clonedPerson = new MutablePerson(name, phone, email, address, tags);
+        delegate.accept(clonedPerson);
+        clonedPerson.markComplete();
+        return clonedPerson;
     }
 
 }
