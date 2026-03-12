@@ -66,7 +66,6 @@ public class StringUtil {
 
         String preppedWord = substring.trim().toLowerCase();
         checkArgument(!preppedWord.isEmpty(), "Word parameter cannot be empty");
-        
         String preppedSentence = sentence.toLowerCase();
 
         return preppedSentence.contains(preppedWord);
