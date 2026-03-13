@@ -279,7 +279,7 @@ _{Explain here how the data archiving feature will be implemented}_
 * frequently need to retrieve student context quickly during emails, grading, and office hours
 * need to organise students by module, tutorial, and lab group, and to reset cohorts each semester while keeping old records for reference
 
-**Value proposition**: 
+**Value proposition**:
 * Focusing on the unique hierarchy of campus life.
 * Mapping students by course codes, TAs by labs and tutorials.
 * Allows a professor or teaching assistant to retrieve vital contact context or generate student lists quickly
@@ -306,7 +306,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `*`      | sloppy user                        | undo some commands                                     | revert the effects of mistakes                                         |
 | `*`      | user                               | have some customized configuration options             | customize this software to improve my efficiency and comfort           |
 | `* *`    | professor                          | archive a completed semester’s cohort                  | start each new semester with a clean state                             |
-| `*`      | professor                          | record short notes about students                      | recall important context when meeting them again in future semesters   |              
+| `*`      | professor                          | record short notes about students                      | recall important context when meeting them again in future semesters   |
 
 ### Use cases
 
@@ -334,7 +334,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
     * 1b1. System shows an error message.
 
       Use case resumes at step 1.
-      
+
 **Use case: UC02 - Delete a contact**
 
 **MSS**
@@ -353,7 +353,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   * 3a1. System remove the contact.
 
     Use case ends.
-    
+
 **Use case: UC03 - find a person by name**
 
 **MSS**
@@ -401,14 +401,14 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
   * 2a1. Doritus shows an error message indicating that no contacts were found.
   * 2a2. User revises the search keyword.
- 
+
     Use case resumes at step 1.
 
 * 4a. The given index is invalid (out of range or not a positive integer).
 
   * 4a1. Doritus shows an error message explaining that the index must refer to a contact in the displayed list.
   * 4a2. User checks the displayed list and re-enters `addtag INDEX TAG`.
- 
+
     Use case resumes at step 4.
 
 * 4b. The given tag is invalid or already exists for that student.
@@ -437,21 +437,21 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 * 1a. The address book is empty.
 
   * 1a1. Doritus shows an empty list with a message such as “No contacts found. Add your first contact to get started!”.
-  
+
     Use case ends.
 
 * 3a. The specified tag or filter value is invalid.
 
   * 3a1. Doritus shows an error message explaining the valid format for tags/filters.
   * 3a2. User re-enters the filter with a valid value.
-  
+
     Use case resumes at step 3.
 
 * 4a. No contacts match the specified tutorial or lab group.
 
   * 4a1. Doritus shows an empty list and a message such as “No contacts found for this group”.
   * 4a2. User may try a different group or adjust the filter.
- 
+
     Use case resumes at step 3.
 
 ---
@@ -473,7 +473,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 * 1a. No contacts are visible in the current view.
 
   * 1a1. Doritus shows a message indicating there is nothing to archive.
-  
+
     Use case ends.
 
 * 2a. The archive command format is invalid.
@@ -487,7 +487,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
   * 3a1. Doritus shows an error message explaining that the archive could not be saved and that no changes were made to active data.
   * 3a2. User resolves the underlying issue (e.g., disk space, permissions) and retries the command.
-  
+
     Use case resumes at step 2.
 
 **Use case: UC07 - see command instructions**
