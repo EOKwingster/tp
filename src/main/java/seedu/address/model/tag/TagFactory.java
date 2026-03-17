@@ -26,10 +26,12 @@ public class TagFactory {
      *                                  schema.
      */
     private static TagSchema getAssociatedSchema(String prefix) {
+        // CHECKSTYLE.OFF: Indentation
         return switch (prefix) {
             case TutorialTagSchema.VARIANT -> new TutorialTagSchema();
             default -> throw new IllegalArgumentException(String.format(UNKNOWN_SCHEMA_MESSAGE, prefix));
         };
+        // CHECKSTYLE.ON: Indentation
     }
 
     /**

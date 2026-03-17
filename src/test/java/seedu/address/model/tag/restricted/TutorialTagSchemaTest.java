@@ -7,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 public class TutorialTagSchemaTest {
-    private TutorialTagSchema schema = new TutorialTagSchema();
-
     public static final String VALID_TUTORIAL_TAG = "D24";
     public static final String INVALID_TUTORIAL_TAG = "d24";
+
+    private TutorialTagSchema schema = new TutorialTagSchema();
 
     @Test
     public void testValidTags() {
@@ -33,9 +33,7 @@ public class TutorialTagSchemaTest {
 
     @Test
     public void testGetConstraintViolationMessage() {
-        assertEquals(
-                "Tutorial tag expects format of an optional uppercase letter followed by maximum 2 numbers. Valid: 'D24' and '8'",
-                schema.getConstraintViolationMessage());
+        assertEquals(TutorialTagSchema.MESSAGE_CONSTRAINTS, schema.getConstraintViolationMessage());
     }
 
     @Test

@@ -8,6 +8,7 @@ import static seedu.address.model.tag.restricted.TagSchemaTest.VALID_PREFIX;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.model.tag.Tag;
@@ -123,7 +124,7 @@ public class RestrictedTagTest {
     }
 
     @Test
-    public void TagParts_parse_success() {
+    public void tagParts_parse_success() {
         String tag = "prefix:value";
         Optional<RestrictedTag.TagParts> parsed = RestrictedTag.TagParts.parse(tag);
         assertTrue(parsed.isPresent());
@@ -132,18 +133,18 @@ public class RestrictedTagTest {
     }
 
     @Test
-    public void TagParts_parseNull_fails() {
+    public void tagParts_parseNull_fails() {
         assertThrows(NullPointerException.class, () -> RestrictedTag.TagParts.parse(null));
     }
 
     @Test
-    public void TagParts_parseEmptyString_fails() {
+    public void tagParts_parseEmptyString_fails() {
         Optional<RestrictedTag.TagParts> parsed = RestrictedTag.TagParts.parse("");
         assertFalse(parsed.isPresent());
     }
 
     @Test
-    public void TagParts_parse_multipleDelimiters_returnsOnlyFirst() {
+    public void tagParts_parseMultipleDelimiters_returnsOnlyFirst() {
         String tag = "prefix:value:extra";
         Optional<RestrictedTag.TagParts> parsed = RestrictedTag.TagParts.parse(tag);
         assertTrue(parsed.isPresent());
@@ -152,7 +153,7 @@ public class RestrictedTagTest {
     }
 
     @Test
-    public void TagParts_parse_noDelimiter_returnsEmpty() {
+    public void tagParts_parseNoDelimiter_returnsEmpty() {
         Optional<RestrictedTag.TagParts> parsed = RestrictedTag.TagParts.parse("nodelimiter");
         assertFalse(parsed.isPresent());
     }
