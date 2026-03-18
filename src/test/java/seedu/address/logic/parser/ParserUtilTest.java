@@ -19,7 +19,10 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.Position;
 import seedu.address.model.person.Username;
+import seedu.address.model.tag.AbstractTag;
 import seedu.address.model.tag.Tag;
+import seedu.address.model.tag.restricted.RestrictedTag;
+import seedu.address.model.tag.restricted.TutorialTagSchema;
 
 public class ParserUtilTest {
     private static final String INVALID_NAME = "R@chel";
@@ -28,6 +31,7 @@ public class ParserUtilTest {
     private static final String INVALID_POSITION = " ";
     private static final String INVALID_EMAIL = "example.com";
     private static final String INVALID_TAG = "#friend";
+    private static final String INVALID_TAG_RESTRICTED = "asdfgh:123";
 
     private static final String VALID_NAME = "Rachel Walker";
     private static final String VALID_PHONE = "12345678";
@@ -36,6 +40,7 @@ public class ParserUtilTest {
     private static final String VALID_EMAIL = "rachel@example.com";
     private static final String VALID_TAG_1 = "friend";
     private static final String VALID_TAG_2 = "neighbour";
+    private static final String VALID_TAG_RESTRICTED_1 = "tut:A2";
 
     private static final String WHITESPACE = " \t\r\n";
 
@@ -191,6 +196,18 @@ public class ParserUtilTest {
     }
 
     @Test
+    public void parseRestrictedTag_validValueWithoutWhitespace_returnsTag() throws Exception {
+        // simple integration test
+        RestrictedTag expectedTag = new RestrictedTag(new TutorialTagSchema(), VALID_TAG_RESTRICTED_1);
+        assertEquals(expectedTag, ParserUtil.parseTag(VALID_TAG_RESTRICTED_1));
+    }
+
+    @Test
+    public void parseRestrictedTag_invalid_throwsParseException() throws Exception {
+        assertThrows(ParseException.class, () -> ParserUtil.parseTag(INVALID_TAG_RESTRICTED));
+    }
+
+    @Test
     public void parseTag_validValueWithWhitespace_returnsTrimmedTag() throws Exception {
         String tagWithWhitespace = WHITESPACE + VALID_TAG_1 + WHITESPACE;
         Tag expectedTag = new Tag(VALID_TAG_1);
@@ -214,8 +231,8 @@ public class ParserUtilTest {
 
     @Test
     public void parseTags_collectionWithValidTags_returnsTagSet() throws Exception {
-        Set<Tag> actualTagSet = ParserUtil.parseTags(Arrays.asList(VALID_TAG_1, VALID_TAG_2));
-        Set<Tag> expectedTagSet = new HashSet<Tag>(Arrays.asList(new Tag(VALID_TAG_1), new Tag(VALID_TAG_2)));
+        Set<AbstractTag> actualTagSet = ParserUtil.parseTags(Arrays.asList(VALID_TAG_1, VALID_TAG_2));
+        Set<AbstractTag> expectedTagSet = new HashSet<>(Arrays.asList(new Tag(VALID_TAG_1), new Tag(VALID_TAG_2)));
 
         assertEquals(expectedTagSet, actualTagSet);
     }

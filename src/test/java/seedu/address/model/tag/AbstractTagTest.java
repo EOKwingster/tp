@@ -10,12 +10,12 @@ import org.junit.jupiter.api.Test;
 
 public class AbstractTagTest {
 
-    private static final String VALID_TAG_NAME_1 = "friend";
-    private static final String VALID_TAG_NAME_2 = "colleague";
-    private static final String VALID_TAG_NAME_WITH_NUMBERS = "tag123";
-    private static final String INVALID_TAG_NAME_EMPTY = "";
-    private static final String INVALID_TAG_NAME_SPACES = "tag with spaces";
-    private static final String INVALID_TAG_NAME_SPECIAL_CHARS = "tag@friend";
+    public static final String VALID_TAG_NAME_1 = "friend";
+    public static final String VALID_TAG_NAME_2 = "colleague";
+    public static final String VALID_TAG_NAME_WITH_NUMBERS = "tag123";
+    public static final String INVALID_TAG_NAME_EMPTY = "";
+    public static final String INVALID_TAG_NAME_SPACES = "tag with spaces";
+    public static final String INVALID_TAG_NAME_SPECIAL_CHARS = "tag@friend";
 
     @Test
     public void constructor_null_throwsNullPointerException() {
@@ -51,21 +51,21 @@ public class AbstractTagTest {
 
     @Test
     public void isValidTagName_validTagNames_returnsTrue() {
-        assertTrue(AbstractTag.isValidTagName(VALID_TAG_NAME_1));
-        assertTrue(AbstractTag.isValidTagName(VALID_TAG_NAME_2));
-        assertTrue(AbstractTag.isValidTagName(VALID_TAG_NAME_WITH_NUMBERS));
-        assertTrue(AbstractTag.isValidTagName("a")); // Single character
-        assertTrue(AbstractTag.isValidTagName("1")); // Single number
+        assertTrue(Tag.isValidTagName(VALID_TAG_NAME_1));
+        assertTrue(Tag.isValidTagName(VALID_TAG_NAME_2));
+        assertTrue(Tag.isValidTagName(VALID_TAG_NAME_WITH_NUMBERS));
+        assertTrue(Tag.isValidTagName("a")); // Single character
+        assertTrue(Tag.isValidTagName("1")); // Single number
     }
 
     @Test
     public void isValidTagName_invalidTagNames_returnsFalse() {
-        assertFalse(AbstractTag.isValidTagName(INVALID_TAG_NAME_EMPTY));
-        assertFalse(AbstractTag.isValidTagName(INVALID_TAG_NAME_SPACES));
-        assertFalse(AbstractTag.isValidTagName(INVALID_TAG_NAME_SPECIAL_CHARS));
-        assertFalse(AbstractTag.isValidTagName("tag-name")); // With hyphen
-        assertFalse(AbstractTag.isValidTagName("tag_name")); // With underscore
-        assertFalse(AbstractTag.isValidTagName("tag.name")); // With period
+        assertFalse(Tag.isValidTagName(INVALID_TAG_NAME_EMPTY));
+        assertFalse(Tag.isValidTagName(INVALID_TAG_NAME_SPACES));
+        assertFalse(Tag.isValidTagName(INVALID_TAG_NAME_SPECIAL_CHARS));
+        assertFalse(Tag.isValidTagName("tag-name")); // With hyphen
+        assertFalse(Tag.isValidTagName("tag_name")); // With underscore
+        assertFalse(Tag.isValidTagName("tag.name")); // With period
     }
 
     @Test
@@ -126,4 +126,3 @@ public class AbstractTagTest {
         assertEquals("[" + VALID_TAG_NAME_1 + "]", tag.toString());
     }
 }
-

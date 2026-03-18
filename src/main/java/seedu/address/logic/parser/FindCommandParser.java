@@ -10,7 +10,7 @@ import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.TagsContainsTagPredicate;
-import seedu.address.model.tag.Tag;
+import seedu.address.model.tag.AbstractTag;
 
 /**
  * Parses input arguments and creates a new FindCommand object
@@ -34,7 +34,7 @@ public class FindCommandParser implements Parser<FindCommand> {
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
         }
 
-        Set<Tag> tagList = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
+        Set<AbstractTag> tagList = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
 
         String[] nameKeywords = preamble.isEmpty() ? new String[0] : preamble.split("\\s+");
 

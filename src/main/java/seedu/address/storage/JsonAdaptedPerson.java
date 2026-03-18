@@ -17,7 +17,7 @@ import seedu.address.model.person.Phone;
 import seedu.address.model.person.Position;
 import seedu.address.model.person.TeachingStaff;
 import seedu.address.model.person.Username;
-import seedu.address.model.tag.Tag;
+import seedu.address.model.tag.AbstractTag;
 
 /**
  * Jackson-friendly version of {@link Person}.
@@ -85,7 +85,7 @@ class JsonAdaptedPerson {
      * @throws IllegalValueException If any data constraints are violated.
      */
     public Person toModelType() throws IllegalValueException {
-        final List<Tag> personTags = new ArrayList<>();
+        final List<AbstractTag> personTags = new ArrayList<>();
         for (JsonAdaptedTag tag : tags) {
             personTags.add(tag.toModelType());
         }
@@ -123,7 +123,7 @@ class JsonAdaptedPerson {
         }
         final Username modelUsername = new Username(username);
 
-        final Set<Tag> modelTags = new HashSet<>(personTags);
+        final Set<AbstractTag> modelTags = new HashSet<>(personTags);
 
         boolean isStaff = TYPE_STAFF.equals(type);
         if (isStaff) {

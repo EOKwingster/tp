@@ -11,6 +11,7 @@ import java.util.function.Consumer;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.person.exceptions.ImmutableEscapedScopeException;
+import seedu.address.model.tag.AbstractTag;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -26,12 +27,12 @@ public sealed class Person permits Person.MutablePerson, TeachingStaff {
 
     // Data fields
     protected Username username;
-    protected Set<Tag> tags = new HashSet<>();
+    protected Set<AbstractTag> tags = new HashSet<>();
 
     /**
      * Every field must be present and not null.
      */
-    public Person(Name name, Phone phone, Email email, Username username, Set<Tag> tags) {
+    public <T extends AbstractTag> Person(Name name, Phone phone, Email email, Username username, Set<T> tags) {
         requireAllNonNull(name, phone, email, username, tags);
         this.name = name;
         this.phone = phone;
@@ -60,7 +61,7 @@ public sealed class Person permits Person.MutablePerson, TeachingStaff {
      * Returns an immutable tag set, which throws {@code UnsupportedOperationException}
      * if modification is attempted.
      */
-    public Set<Tag> getTags() {
+    public Set<AbstractTag> getTags() {
         return Collections.unmodifiableSet(tags);
     }
 
@@ -154,7 +155,7 @@ public sealed class Person permits Person.MutablePerson, TeachingStaff {
         // object cannot be modified in an outer scope
         private boolean isEditable = true;
 
-        MutablePerson(Name name, Phone phone, Email email, Username username, Set<Tag> tags) {
+        MutablePerson(Name name, Phone phone, Email email, Username username, Set<AbstractTag> tags) {
             super(name, phone, email, username, tags);
         }
 
@@ -182,7 +183,7 @@ public sealed class Person permits Person.MutablePerson, TeachingStaff {
             this.username = username;
         }
 
-        public void setTags(Set<Tag> tags) {
+        public void setTags(Set<AbstractTag> tags) {
             checkEditable();
             requireNonNull(tags);
             this.tags = Collections.unmodifiableSet(tags);

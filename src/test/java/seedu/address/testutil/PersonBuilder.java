@@ -10,7 +10,7 @@ import seedu.address.model.person.Phone;
 import seedu.address.model.person.Position;
 import seedu.address.model.person.TeachingStaff;
 import seedu.address.model.person.Username;
-import seedu.address.model.tag.Tag;
+import seedu.address.model.tag.AbstractTag;
 import seedu.address.model.util.SampleDataUtil;
 
 /**
@@ -28,7 +28,7 @@ public class PersonBuilder {
     private Email email;
     private Username username;
     private Position position;
-    private Set<Tag> tags;
+    private Set<AbstractTag> tags;
 
     /**
      * Creates a {@code PersonBuilder} with the default details.
@@ -67,9 +67,10 @@ public class PersonBuilder {
     }
 
     /**
-     * Parses the {@code tags} into a {@code Set<Tag>} and set it to the {@code Person} that we are building.
+     * Parses the {@code tags} into a {@code Set<Tag>} and set it to the
+     * {@code Person} that we are building.
      */
-    public PersonBuilder withTags(String ... tags) {
+    public PersonBuilder withTags(String... tags) {
         this.tags = SampleDataUtil.getTagSet(tags);
         return this;
     }
@@ -83,8 +84,8 @@ public class PersonBuilder {
     }
 
     /**
-     * Sets the {@code Position} of the {@code Person} that we are building.
-     * This will cause build() to return a TeachingStaff instead of a Person.
+     * Sets the {@code Position} of the {@code Person} that we are building. This
+     * will cause build() to return a TeachingStaff instead of a Person.
      */
     public PersonBuilder withPosition(String position) {
         this.position = new Position(position);
@@ -108,7 +109,8 @@ public class PersonBuilder {
     }
 
     /**
-     * Builds and returns a Person or TeachingStaff depending on whether position is set.
+     * Builds and returns a Person or TeachingStaff depending on whether position is
+     * set.
      */
     public Person build() {
         if (position != null) {

@@ -4,15 +4,15 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import seedu.address.commons.util.ToStringBuilder;
-import seedu.address.model.tag.Tag;
+import seedu.address.model.tag.AbstractTag;
 
 /**
  * Tests that a {@code Person}'s {@code Name} matches any of the keywords given.
  */
 public class TagsContainsTagPredicate implements Predicate<Person> {
-    private final Set<Tag> tags;
+    private final Set<AbstractTag> tags;
 
-    public TagsContainsTagPredicate(Set<Tag> tags) {
+    public TagsContainsTagPredicate(Set<AbstractTag> tags) {
         this.tags = tags;
     }
 

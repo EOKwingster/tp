@@ -1,7 +1,6 @@
 package seedu.address.model.tag;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.commons.util.AppUtil.checkArgument;
 
 import java.util.Objects;
 
@@ -10,10 +9,6 @@ import java.util.Objects;
  * Guarantees: immutable; name is valid as declared in {@link #isValidTagName(String)}
  */
 public abstract class AbstractTag {
-
-    public static final String MESSAGE_CONSTRAINTS = "Tags names should be alphanumeric";
-    public static final String VALIDATION_REGEX = "\\p{Alnum}+";
-
     public final String tagName;
 
     /**
@@ -23,15 +18,7 @@ public abstract class AbstractTag {
      */
     public AbstractTag(String tagName) {
         requireNonNull(tagName);
-        checkArgument(isValidTagName(tagName), MESSAGE_CONSTRAINTS);
         this.tagName = tagName;
-    }
-
-    /**
-     * Returns true if a given string is a valid tag name.
-     */
-    public static boolean isValidTagName(String test) {
-        return test.matches(VALIDATION_REGEX);
     }
 
     public abstract TagType getTagType();

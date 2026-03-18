@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import seedu.address.commons.util.ToStringBuilder;
-import seedu.address.model.tag.Tag;
+import seedu.address.model.tag.AbstractTag;
 
 /**
  * Represents a Teaching Staff member in the address book.
@@ -49,7 +49,7 @@ public non-sealed class TeachingStaff extends Person {
      * @param name A valid name (required).
      * @param tags Tags for the staff (can be empty).
      */
-    public TeachingStaff(Name name, Set<Tag> tags) {
+    public <T extends AbstractTag> TeachingStaff(Name name, Set<T> tags) {
         super(
                 name,
                 defaultPhoneForName(name),
@@ -63,8 +63,8 @@ public non-sealed class TeachingStaff extends Person {
     /**
      * Every field must be present and not null.
      */
-    public TeachingStaff(Name name, Phone phone, Email email, Username username,
-                         Position position, Set<Tag> tags) {
+    public <T extends AbstractTag> TeachingStaff(Name name, Phone phone, Email email, Username username,
+                         Position position, Set<T> tags) {
         super(name, phone, email, username, tags);
         requireAllNonNull(position);
         this.position = position;
