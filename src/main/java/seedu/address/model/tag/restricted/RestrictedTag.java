@@ -48,7 +48,12 @@ public class RestrictedTag extends AbstractTag {
 
     @Override
     public TagType getTagType() {
-        return TagType.TAG;
+        return switch (getSchema().getVariant()) {
+        case CourseTagSchema.VARIANT -> TagType.COURSE;
+        case TutorialTagSchema.VARIANT -> TagType.TUTORIAL;
+        case LabTagSchema.VARIANT -> TagType.LAB;
+        default -> TagType.TAG;
+        };
     }
 
     public TagSchema getSchema() {

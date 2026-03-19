@@ -4,16 +4,21 @@ package seedu.address.model.tag;
  * Represents types of Tag in the address book.
  */
 public enum TagType {
-    TAG("Tag"),;
+    TAG(999),
+    COURSE(0),
+    TUTORIAL(1),
+    LAB(2);
 
-    private final String description;
+    /**
+     * The priority of the tag type for UI display. The lower the value, the higher the priority.
+     */
+    private final int uiPriority;
 
-    TagType(String description) {
-        this.description = description;
+    TagType(int uiPriority) {
+        this.uiPriority = uiPriority;
     }
 
-    @Override
-    public String toString() {
-        return this.description;
+    public int getUiPriority() {
+        return uiPriority;
     }
 }
