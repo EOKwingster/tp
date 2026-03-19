@@ -3,12 +3,14 @@ package seedu.address.testutil;
 import java.util.HashSet;
 import java.util.Set;
 
-import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
-import seedu.address.model.tag.Tag;
+import seedu.address.model.person.Position;
+import seedu.address.model.person.TeachingStaff;
+import seedu.address.model.person.Username;
+import seedu.address.model.tag.AbstractTag;
 import seedu.address.model.util.SampleDataUtil;
 
 /**
@@ -19,13 +21,14 @@ public class PersonBuilder {
     public static final String DEFAULT_NAME = "Amy Bee";
     public static final String DEFAULT_PHONE = "85355255";
     public static final String DEFAULT_EMAIL = "amy@gmail.com";
-    public static final String DEFAULT_ADDRESS = "123, Jurong West Ave 6, #08-111";
+    public static final String DEFAULT_USERNAME = "amybee";
 
     private Name name;
     private Phone phone;
     private Email email;
-    private Address address;
-    private Set<Tag> tags;
+    private Username username;
+    private Position position;
+    private Set<AbstractTag> tags;
 
     /**
      * Creates a {@code PersonBuilder} with the default details.
@@ -34,7 +37,8 @@ public class PersonBuilder {
         name = new Name(DEFAULT_NAME);
         phone = new Phone(DEFAULT_PHONE);
         email = new Email(DEFAULT_EMAIL);
-        address = new Address(DEFAULT_ADDRESS);
+        username = new Username(DEFAULT_USERNAME);
+        position = null;
         tags = new HashSet<>();
     }
 
@@ -45,7 +49,12 @@ public class PersonBuilder {
         name = personToCopy.getName();
         phone = personToCopy.getPhone();
         email = personToCopy.getEmail();
-        address = personToCopy.getAddress();
+        username = personToCopy.getUsername();
+        if (personToCopy instanceof TeachingStaff staff) {
+            position = staff.getPosition();
+        } else {
+            position = null;
+        }
         tags = new HashSet<>(personToCopy.getTags());
     }
 
@@ -58,18 +67,28 @@ public class PersonBuilder {
     }
 
     /**
-     * Parses the {@code tags} into a {@code Set<Tag>} and set it to the {@code Person} that we are building.
+     * Parses the {@code tags} into a {@code Set<Tag>} and set it to the
+     * {@code Person} that we are building.
      */
-    public PersonBuilder withTags(String ... tags) {
+    public PersonBuilder withTags(String... tags) {
         this.tags = SampleDataUtil.getTagSet(tags);
         return this;
     }
 
     /**
-     * Sets the {@code Address} of the {@code Person} that we are building.
+     * Sets the {@code Username} of the {@code Person} that we are building.
      */
-    public PersonBuilder withAddress(String address) {
-        this.address = new Address(address);
+    public PersonBuilder withUsername(String username) {
+        this.username = new Username(username);
+        return this;
+    }
+
+    /**
+     * Sets the {@code Position} of the {@code Person} that we are building. This
+     * will cause build() to return a TeachingStaff instead of a Person.
+     */
+    public PersonBuilder withPosition(String position) {
+        this.position = new Position(position);
         return this;
     }
 
@@ -89,8 +108,15 @@ public class PersonBuilder {
         return this;
     }
 
+    /**
+     * Builds and returns a Person or TeachingStaff depending on whether position is
+     * set.
+     */
     public Person build() {
-        return new Person(name, phone, email, address, tags);
+        if (position != null) {
+            return new TeachingStaff(name, phone, email, username, position, tags);
+        }
+        return new Person(name, phone, email, username, tags);
     }
 
 }

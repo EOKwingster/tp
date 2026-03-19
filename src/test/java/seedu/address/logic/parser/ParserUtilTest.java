@@ -14,25 +14,33 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.Position;
+import seedu.address.model.person.Username;
+import seedu.address.model.tag.AbstractTag;
 import seedu.address.model.tag.Tag;
+import seedu.address.model.tag.restricted.RestrictedTag;
+import seedu.address.model.tag.restricted.TutorialTagSchema;
 
 public class ParserUtilTest {
     private static final String INVALID_NAME = "R@chel";
     private static final String INVALID_PHONE = "+651234";
-    private static final String INVALID_ADDRESS = " ";
+    private static final String INVALID_USERNAME = " ";
+    private static final String INVALID_POSITION = " ";
     private static final String INVALID_EMAIL = "example.com";
     private static final String INVALID_TAG = "#friend";
+    private static final String INVALID_TAG_RESTRICTED = "asdfgh:123";
 
     private static final String VALID_NAME = "Rachel Walker";
-    private static final String VALID_PHONE = "123456";
-    private static final String VALID_ADDRESS = "123 Main Street #0505";
+    private static final String VALID_PHONE = "12345678";
+    private static final String VALID_USERNAME = "rachelwalker";
+    private static final String VALID_POSITION = "Teaching Assistant";
     private static final String VALID_EMAIL = "rachel@example.com";
     private static final String VALID_TAG_1 = "friend";
     private static final String VALID_TAG_2 = "neighbour";
+    private static final String VALID_TAG_RESTRICTED_1 = "tut:A2";
 
     private static final String WHITESPACE = " \t\r\n";
 
@@ -103,26 +111,49 @@ public class ParserUtilTest {
     }
 
     @Test
-    public void parseAddress_null_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> ParserUtil.parseAddress((String) null));
+    public void parseUsername_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseUsername((String) null));
     }
 
     @Test
-    public void parseAddress_invalidValue_throwsParseException() {
-        assertThrows(ParseException.class, () -> ParserUtil.parseAddress(INVALID_ADDRESS));
+    public void parseUsername_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseUsername(INVALID_USERNAME));
     }
 
     @Test
-    public void parseAddress_validValueWithoutWhitespace_returnsAddress() throws Exception {
-        Address expectedAddress = new Address(VALID_ADDRESS);
-        assertEquals(expectedAddress, ParserUtil.parseAddress(VALID_ADDRESS));
+    public void parseUsername_validValueWithoutWhitespace_returnsUsername() throws Exception {
+        Username expectedUsername = new Username(VALID_USERNAME);
+        assertEquals(expectedUsername, ParserUtil.parseUsername(VALID_USERNAME));
     }
 
     @Test
-    public void parseAddress_validValueWithWhitespace_returnsTrimmedAddress() throws Exception {
-        String addressWithWhitespace = WHITESPACE + VALID_ADDRESS + WHITESPACE;
-        Address expectedAddress = new Address(VALID_ADDRESS);
-        assertEquals(expectedAddress, ParserUtil.parseAddress(addressWithWhitespace));
+    public void parseUsername_validValueWithWhitespace_returnsTrimmedUsername() throws Exception {
+        String usernameWithWhitespace = WHITESPACE + VALID_USERNAME + WHITESPACE;
+        Username expectedUsername = new Username(VALID_USERNAME);
+        assertEquals(expectedUsername, ParserUtil.parseUsername(usernameWithWhitespace));
+    }
+
+    @Test
+    public void parsePosition_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parsePosition((String) null));
+    }
+
+    @Test
+    public void parsePosition_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parsePosition(INVALID_POSITION));
+    }
+
+    @Test
+    public void parsePosition_validValueWithoutWhitespace_returnsPosition() throws Exception {
+        Position expectedPosition = new Position(VALID_POSITION);
+        assertEquals(expectedPosition, ParserUtil.parsePosition(VALID_POSITION));
+    }
+
+    @Test
+    public void parsePosition_validValueWithWhitespace_returnsTrimmedPosition() throws Exception {
+        String positionWithWhitespace = WHITESPACE + VALID_POSITION + WHITESPACE;
+        Position expectedPosition = new Position(VALID_POSITION);
+        assertEquals(expectedPosition, ParserUtil.parsePosition(positionWithWhitespace));
     }
 
     @Test
@@ -165,6 +196,18 @@ public class ParserUtilTest {
     }
 
     @Test
+    public void parseRestrictedTag_validValueWithoutWhitespace_returnsTag() throws Exception {
+        // simple integration test
+        RestrictedTag expectedTag = new RestrictedTag(new TutorialTagSchema(), VALID_TAG_RESTRICTED_1);
+        assertEquals(expectedTag, ParserUtil.parseTag(VALID_TAG_RESTRICTED_1));
+    }
+
+    @Test
+    public void parseRestrictedTag_invalid_throwsParseException() throws Exception {
+        assertThrows(ParseException.class, () -> ParserUtil.parseTag(INVALID_TAG_RESTRICTED));
+    }
+
+    @Test
     public void parseTag_validValueWithWhitespace_returnsTrimmedTag() throws Exception {
         String tagWithWhitespace = WHITESPACE + VALID_TAG_1 + WHITESPACE;
         Tag expectedTag = new Tag(VALID_TAG_1);
@@ -188,8 +231,8 @@ public class ParserUtilTest {
 
     @Test
     public void parseTags_collectionWithValidTags_returnsTagSet() throws Exception {
-        Set<Tag> actualTagSet = ParserUtil.parseTags(Arrays.asList(VALID_TAG_1, VALID_TAG_2));
-        Set<Tag> expectedTagSet = new HashSet<Tag>(Arrays.asList(new Tag(VALID_TAG_1), new Tag(VALID_TAG_2)));
+        Set<AbstractTag> actualTagSet = ParserUtil.parseTags(Arrays.asList(VALID_TAG_1, VALID_TAG_2));
+        Set<AbstractTag> expectedTagSet = new HashSet<>(Arrays.asList(new Tag(VALID_TAG_1), new Tag(VALID_TAG_2)));
 
         assertEquals(expectedTagSet, actualTagSet);
     }

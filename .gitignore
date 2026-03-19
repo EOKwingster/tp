@@ -3,14 +3,13 @@
 /build/
 src/main/resources/docs/
 bin
-
+/.claude/
 # IDEA files
 /.idea/
 /out/
 /*.iml
 
 # Storage/log files
-/data/
 /config.json
 /preferences.json
 /*.log.*
@@ -24,3 +23,4 @@ src/test/data/sandbox/
 docs/_site/
 
 /node_modules/
+data/

@@ -111,7 +111,7 @@ Here are the other classes in `Logic` (omitted from the class diagram above) tha
 <img src="images/ParserClasses.png" width="600"/>
 
 How the parsing works:
-* When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as a `Command` object.
+* When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as a `Command` object. For example, `AddCommandParser` handles both `add` (student) and `add staff` (teaching staff) by inspecting the preamble; list filtering is handled by `ListCommand`, `StaffListCommand`, and `StudentListCommand`.
 * All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
 
 ### Model component
@@ -122,8 +122,8 @@ How the parsing works:
 
 The `Model` component,
 
-* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
-* stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
+* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object). A person may be a student (base `Person`) or teaching staff (`TeachingStaff`, which extends `Person` and adds a `Position` field; allowed values are "Teaching Assistant" and "Professors").
+* stores the currently 'selected' `Person` objects (e.g., results of a search query or list filter) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change. Commands such as `list`, `staffslist`, and `studentslist` update this filter to show all persons, only teaching staff, or only students respectively.
 * stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
 
@@ -154,6 +154,15 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 ## **Implementation**
 
 This section describes some noteworthy details on how certain features are implemented.
+
+### Person and TeachingStaff
+
+The address book holds a single list of `Person` objects. Two types of persons are supported:
+
+* **Students** — base `Person` instances, added with `add n/NAME p/... e/... u/...`.
+* **Teaching staff** — `TeachingStaff` instances (extend `Person`) with an additional `Position` field. Added with `add staff n/NAME` (name only; phone, email, username and position default) or `add staff n/NAME p/... e/... u/... pos/POSITION` (all fields). `Position` is restricted to "Teaching Assistant" or "Professors".
+
+The UI and commands treat both types uniformly as `Person` where possible (e.g. `find`, `delete` by index). The filtered list in the model can show all persons (`list`), only teaching staff (`staffslist`), or only students (`studentslist`) by setting a predicate on the underlying list. `edit` supports an optional `pos/POSITION` field that applies only to teaching staff.
 
 ### \[Proposed\] Undo/redo feature
 
@@ -260,6 +269,8 @@ _{Explain here how the data archiving feature will be implemented}_
 
 ### Product scope
 
+**Product:** Doritus — An address book software for NUS teaching staff to manage student contacts.
+
 **Target user profile**:
 
 * NUS teaching staff (lecturers, instructors, and teaching assistants) who manage hundreds to thousands of students each semester
@@ -268,7 +279,7 @@ _{Explain here how the data archiving feature will be implemented}_
 * frequently need to retrieve student context quickly during emails, grading, and office hours
 * need to organise students by module, tutorial, and lab group, and to reset cohorts each semester while keeping old records for reference
 
-**Value proposition**: 
+**Value proposition**:
 * Focusing on the unique hierarchy of campus life.
 * Mapping students by course codes, TAs by labs and tutorials.
 * Allows a professor or teaching assistant to retrieve vital contact context or generate student lists quickly
@@ -295,7 +306,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `*`      | sloppy user                        | undo some commands                                     | revert the effects of mistakes                                         |
 | `*`      | user                               | have some customized configuration options             | customize this software to improve my efficiency and comfort           |
 | `* *`    | professor                          | archive a completed semester’s cohort                  | start each new semester with a clean state                             |
-| `*`      | professor                          | record short notes about students                      | recall important context when meeting them again in future semesters   |              
+| `*`      | professor                          | record short notes about students                      | recall important context when meeting them again in future semesters   |
 
 ### Use cases
 
@@ -323,7 +334,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
     * 1b1. System shows an error message.
 
       Use case resumes at step 1.
-      
+
 **Use case: UC02 - Delete a contact**
 
 **MSS**
@@ -342,7 +353,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   * 3a1. System remove the contact.
 
     Use case ends.
-    
+
 **Use case: UC03 - find a person by name**
 
 **MSS**
@@ -390,14 +401,14 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
   * 2a1. Doritus shows an error message indicating that no contacts were found.
   * 2a2. User revises the search keyword.
- 
+
     Use case resumes at step 1.
 
 * 4a. The given index is invalid (out of range or not a positive integer).
 
   * 4a1. Doritus shows an error message explaining that the index must refer to a contact in the displayed list.
   * 4a2. User checks the displayed list and re-enters `addtag INDEX TAG`.
- 
+
     Use case resumes at step 4.
 
 * 4b. The given tag is invalid or already exists for that student.
@@ -426,21 +437,21 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 * 1a. The address book is empty.
 
   * 1a1. Doritus shows an empty list with a message such as “No contacts found. Add your first contact to get started!”.
-  
+
     Use case ends.
 
 * 3a. The specified tag or filter value is invalid.
 
   * 3a1. Doritus shows an error message explaining the valid format for tags/filters.
   * 3a2. User re-enters the filter with a valid value.
-  
+
     Use case resumes at step 3.
 
 * 4a. No contacts match the specified tutorial or lab group.
 
   * 4a1. Doritus shows an empty list and a message such as “No contacts found for this group”.
   * 4a2. User may try a different group or adjust the filter.
- 
+
     Use case resumes at step 3.
 
 ---
@@ -462,7 +473,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 * 1a. No contacts are visible in the current view.
 
   * 1a1. Doritus shows a message indicating there is nothing to archive.
-  
+
     Use case ends.
 
 * 2a. The archive command format is invalid.
@@ -476,7 +487,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
   * 3a1. Doritus shows an error message explaining that the archive could not be saved and that no changes were made to active data.
   * 3a2. User resolves the underlying issue (e.g., disk space, permissions) and retries the command.
-  
+
     Use case resumes at step 2.
 
 **Use case: UC07 - see command instructions**
@@ -515,10 +526,11 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ### Glossary
 
-* **Doritus**: The address book application described in this document.
-* **Contact**: A record representing a student or teaching staff member, including fields such as name, ID, email, phone, and tags.
-* **Student ID**: A unique identifier assigned to NUS students (e.g., `A1234567Z`), used by Doritus to detect duplicate student contacts.
-* **Teaching staff**: Lecturers, instructors, and teaching assistants involved in teaching NUS modules.
+* **Doritus**: An address book software for NUS teaching staff to manage student contacts; the application described in this document.
+* **Contact**: A record representing a person in the address book; either a student (base `Person`) or teaching staff (`TeachingStaff`), including fields such as name, phone, email, username, and tags. Teaching staff additionally have a `Position` (Teaching Assistant or Professors).
+* **Student ID**: A unique identifier assigned to NUS students (e.g., `A1234567Z`), used by the application to detect duplicate student contacts where applicable.
+* **Teaching staff**: Persons represented by the `TeachingStaff` class (extends `Person`), with a `Position` field restricted to "Teaching Assistant" or "Professors". Added via `add staff`; listed via `staffslist` or `list`.
+* **Position**: The role of a teaching staff member; only "Teaching Assistant" and "Professors" are allowed.
 * **Tag**: A short label attached to a contact (e.g., module code, tutorial group, lab group) used for grouping and filtering contacts.
 * **Tutorial group / Lab group**: A subgroup of students within a module, usually associated with a specific weekly session; commonly represented as tags in Doritus.
 * **Mainstream OS**: Windows, Linux, macOS.

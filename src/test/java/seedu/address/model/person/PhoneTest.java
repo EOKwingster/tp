@@ -27,23 +27,34 @@ public class PhoneTest {
         // invalid phone numbers
         assertFalse(Phone.isValidPhone("")); // empty string
         assertFalse(Phone.isValidPhone(" ")); // spaces only
-        assertFalse(Phone.isValidPhone("91")); // less than 3 numbers
+        assertFalse(Phone.isValidPhone("91")); // less than 8 numbers
         assertFalse(Phone.isValidPhone("phone")); // non-numeric
         assertFalse(Phone.isValidPhone("9011p041")); // alphabets within digits
         assertFalse(Phone.isValidPhone("9312 1534")); // spaces within digits
+        assertFalse(Phone.isValidPhone("911")); // only 3 digits
+        assertFalse(Phone.isValidPhone("124293842033123")); // more than 8 digits
+        assertFalse(Phone.isValidPhone("1234567")); // exactly 7 digits (boundary - 1)
+        assertFalse(Phone.isValidPhone("123456789")); // exactly 9 digits (boundary + 1)
+        assertFalse(Phone.isValidPhone("+12345678")); // leading special character
+        assertFalse(Phone.isValidPhone("1234 5678")); // space in middle
+        assertFalse(Phone.isValidPhone("1234567a")); // letter at end
+        assertFalse(Phone.isValidPhone("a1234567")); // letter at start
+        assertFalse(Phone.isValidPhone("00000000 ")); // trailing space
+        assertFalse(Phone.isValidPhone(" 00000000")); // leading space
 
         // valid phone numbers
-        assertTrue(Phone.isValidPhone("911")); // exactly 3 numbers
-        assertTrue(Phone.isValidPhone("93121534"));
-        assertTrue(Phone.isValidPhone("124293842033123")); // long phone numbers
+        assertTrue(Phone.isValidPhone("93121534")); // exactly 8 digits
+        assertTrue(Phone.isValidPhone("12345678"));
+        assertTrue(Phone.isValidPhone("00000000")); // all zeros
+        assertTrue(Phone.isValidPhone("99999999")); // all nines
     }
 
     @Test
     public void equals() {
-        Phone phone = new Phone("999");
+        Phone phone = new Phone("99999999");
 
         // same values -> returns true
-        assertTrue(phone.equals(new Phone("999")));
+        assertTrue(phone.equals(new Phone("99999999")));
 
         // same object -> returns true
         assertTrue(phone.equals(phone));
@@ -55,6 +66,6 @@ public class PhoneTest {
         assertFalse(phone.equals(5.0f));
 
         // different values -> returns false
-        assertFalse(phone.equals(new Phone("995")));
+        assertFalse(phone.equals(new Phone("99599599")));
     }
 }

@@ -20,6 +20,21 @@ public class NameTest {
     }
 
     @Test
+    public void constructor_consecutiveSpaces_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> new Name("James  Ho"));
+    }
+
+    @Test
+    public void constructor_trailingSpace_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> new Name("James Ho "));
+    }
+
+    @Test
+    public void constructor_leadingSpace_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> new Name(" James Ho"));
+    }
+
+    @Test
     public void isValidName() {
         // null name
         assertThrows(NullPointerException.class, () -> Name.isValidName(null));
@@ -29,13 +44,24 @@ public class NameTest {
         assertFalse(Name.isValidName(" ")); // spaces only
         assertFalse(Name.isValidName("^")); // only non-alphanumeric characters
         assertFalse(Name.isValidName("peter*")); // contains non-alphanumeric characters
+        assertFalse(Name.isValidName("peter  jack")); // double consecutive spaces
+        assertFalse(Name.isValidName("peter   jack")); // triple consecutive spaces
+        assertFalse(Name.isValidName("a     b")); // many consecutive spaces
+        assertFalse(Name.isValidName("peter jack ")); // trailing space
+        assertFalse(Name.isValidName(" peter jack")); // leading space
+        assertFalse(Name.isValidName("  peter")); // leading double space
+        assertFalse(Name.isValidName("peter  ")); // trailing double space
+        assertFalse(Name.isValidName("a  b  c")); // multiple double spaces throughout
+        assertFalse(Name.isValidName("James2sad l    eeeee Ho")); // multiple spaces in middle
 
         // valid name
-        assertTrue(Name.isValidName("peter jack")); // alphabets only
+        assertTrue(Name.isValidName("peter jack")); // alphabets only with single space
         assertTrue(Name.isValidName("12345")); // numbers only
         assertTrue(Name.isValidName("peter the 2nd")); // alphanumeric characters
         assertTrue(Name.isValidName("Capital Tan")); // with capital letters
-        assertTrue(Name.isValidName("David Roger Jackson Ray Jr 2nd")); // long names
+        assertTrue(Name.isValidName("David Roger Jackson Ray Jr 2nd")); // long names with single spaces
+        assertTrue(Name.isValidName("a")); // single character
+        assertTrue(Name.isValidName("a b c d")); // multiple single spaces
     }
 
     @Test
