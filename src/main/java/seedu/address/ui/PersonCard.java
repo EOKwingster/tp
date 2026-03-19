@@ -81,4 +81,11 @@ public class PersonCard extends UiPart<Region> {
         case COURSE -> "course-tag";
         };
     }
+
+    /**
+     * Gets the tags FlowPane for testing purposes.
+     */
+    FlowPane getTagsPane() {
+        return tags;
+    }
 }
