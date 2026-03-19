@@ -75,10 +75,10 @@ public class PersonCard extends UiPart<Region> {
 
     private String getStyleClassForTagType(TagType tagType) {
         return switch (tagType) {
-            case TAG -> "default-tag";
-            case TUTORIAL -> "tutorial-tag";
-            case LAB -> "lab-tag";
-            case COURSE -> "course-tag";
+        case TAG -> "default-tag";
+        case TUTORIAL -> "tutorial-tag";
+        case LAB -> "lab-tag";
+        case COURSE -> "course-tag";
         };
     }
 }
