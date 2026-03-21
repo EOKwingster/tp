@@ -72,8 +72,6 @@ public class AddTagCommand extends Command {
         var outMessage = String.format(MESSAGE_ADD_SUCCESS, Messages.format(editedPerson))
                 + formatDuplicateTagMessage(duplicatedTags);
 
-        // TODO: is there any expectation to reset the model's filtered view after
-        // execution?
         return new CommandResult(outMessage);
     }
 

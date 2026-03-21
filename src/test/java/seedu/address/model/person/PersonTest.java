@@ -59,10 +59,17 @@ public class PersonTest {
         ALICE.cloneInto(p -> {
             ref.inner = p;
         });
-        assertTrue(ALICE.equals(ref.inner));
+        assertTrue(ALICE.equals(ref.inner.getPerson()));
         assertThrows(ImmutableEscapedScopeException.class, () -> {
             ref.inner.setName(new Name("this should fail"));
         });
+    }
+
+    @Test
+    public void immutabilityPreservesSubtype() {
+        final var ts = new TeachingStaff(new Name(VALID_NAME_BOB));
+        var cloned = ts.cloneInto(f -> {});
+        assertTrue(cloned instanceof TeachingStaff);
     }
 
     @Test
