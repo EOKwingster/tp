@@ -1,11 +1,13 @@
 package seedu.address.ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javafx.application.Platform;
@@ -22,16 +24,31 @@ import seedu.address.testutil.PersonBuilder;
 
 /**
  * Tests {@link PersonCard}. Requires JavaFX toolkit (initialized once per JVM).
+ * <p>On headless CI (e.g. Linux GitHub Actions), JavaFX may not start; tests are skipped then.
  */
 public class PersonCardTest {
 
+    private static boolean javaFxToolkitAvailable;
+
     @BeforeAll
     public static void initJfx() {
+        javaFxToolkitAvailable = false;
         try {
             Platform.startup(() -> {});
+            javaFxToolkitAvailable = true;
         } catch (IllegalStateException e) {
-            // Toolkit already started by another test
+            // Toolkit already started by another test in the same JVM
+            javaFxToolkitAvailable = true;
+        } catch (UnsupportedOperationException e) {
+            // Common on headless environments without a display / unsupported glass toolkit
+            javaFxToolkitAvailable = false;
         }
+    }
+
+    @BeforeEach
+    public void assumeJavaFxAvailable() {
+        assumeTrue(javaFxToolkitAvailable,
+                "JavaFX toolkit unavailable in this environment (skipped on headless CI).");
     }
 
     @Test
