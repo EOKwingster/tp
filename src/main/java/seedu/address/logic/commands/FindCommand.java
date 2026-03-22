@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
+import seedu.address.logic.parser.FindCommandParser;
 import seedu.address.model.Model;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -34,46 +35,22 @@ public class FindCommand extends Command {
             + "Note: At least one of KEYWORD or TAG must be provided.\n"
             + "Example: " + COMMAND_WORD + " alice bob " + PREFIX_TAG + "friends";
 
-    private final NameContainsKeywordsPredicate namePredicate;
-    private final TagsContainsTagPredicate tagPredicate;
-    private final Predicate<Person> predicate;
+    private final FindPersonDescriptor findPersonDescriptor;
 
     /**
      * Constructs a {@code FindCommand} to filter persons by name keywords only.
      *
-     * @param namePredicate the predicate for matching persons by name keywords;
-     *                      cannot be null
+     * @param fd details of the find command
      */
-    public FindCommand(NameContainsKeywordsPredicate namePredicate) {
-        this(namePredicate, null);
-    }
-
-    /**
-     * Constructs a {@code FindCommand} to filter persons by name keywords and/or tags.
-     * Both predicates are combined using AND logic, so persons must match both conditions
-     * (if both are provided).
-     *
-     * @param namePredicate the predicate for matching persons by name keywords;
-     *                      cannot be null
-     * @param tagPredicate  the predicate for matching persons by tags;
-     *                      can be null to filter by name keywords only
-     */
-    public FindCommand(NameContainsKeywordsPredicate namePredicate, TagsContainsTagPredicate tagPredicate) {
-        Predicate<Person> finalPredicate = x -> true;
-        this.namePredicate = namePredicate;
-        this.tagPredicate = tagPredicate;
-        if (namePredicate != null) {
-            finalPredicate = finalPredicate.and(namePredicate);
-        }
-        if (tagPredicate != null) {
-            finalPredicate = finalPredicate.and(tagPredicate);
-        }
-        this.predicate = finalPredicate;
+    public FindCommand(FindPersonDescriptor fd) {
+        findPersonDescriptor = fd;
     }
 
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
+
+        Predicate<Person> predicate = findPersonDescriptor.getNamePredicate();
 
         model.updateFilteredPersonList(predicate);
         return new CommandResult(
@@ -87,21 +64,18 @@ public class FindCommand extends Command {
         }
 
         // instanceof handles nulls
-        if (!(other instanceof FindCommand)) {
+        if (!(other instanceof FindCommand otherFindCommand)) {
             return false;
         }
 
-        FindCommand otherFindCommand = (FindCommand) other;
-        return Objects.equals(namePredicate, otherFindCommand.namePredicate)
-                && Objects.equals(tagPredicate, otherFindCommand.tagPredicate);
+        return Objects.equals(findPersonDescriptor, otherFindCommand.findPersonDescriptor);
 
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("namePredicate", namePredicate)
-                .add("tagPredicate", tagPredicate)
+                .add("findPersonDescriptor", findPersonDescriptor)
                 .toString();
     }
 
@@ -110,7 +84,7 @@ public class FindCommand extends Command {
      * corresponding field value of the person.
      */
     public static class FindPersonDescriptor {
-        private Set<Name> name;
+        private Set<String> name;
         private Set<Phone> phone;
         private Set<Email> email;
         private Set<AbstractTag> tags;
@@ -129,12 +103,16 @@ public class FindCommand extends Command {
             setTags(toCopy.tags);
         }
 
-        public void setName(Set<Name> name) {
+        public void setName(Set<String> name) {
             this.name = name;
         }
 
-        public Optional<Set<Name>> getName() {
+        public Optional<Set<String>> getName() {
             return (name != null) ? Optional.of(Collections.unmodifiableSet(name)) : Optional.empty();
+        }
+
+        public Predicate<Person> getNamePredicate() {
+            return (name != null) ? new NameContainsKeywordsPredicate(new ArrayList<>(name)) : x -> true;
         }
 
         public void setPhone(Set<Phone> phone) {
