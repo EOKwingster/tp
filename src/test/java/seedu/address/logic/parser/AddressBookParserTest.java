@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.AddTagCommand;
 import seedu.address.logic.commands.ClearCommand;
@@ -28,9 +29,11 @@ import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.StaffListCommand;
 import seedu.address.logic.commands.StudentListCommand;
+import seedu.address.logic.commands.TutorSlotCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.TimeSlot;
 import seedu.address.model.tag.Tag;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 import seedu.address.testutil.PersonBuilder;
@@ -113,6 +116,13 @@ public class AddressBookParserTest {
     public void parseCommand_studentslist() throws Exception {
         assertTrue(parser.parseCommand(StudentListCommand.COMMAND_WORD) instanceof StudentListCommand);
         assertTrue(parser.parseCommand(StudentListCommand.COMMAND_WORD + " 2") instanceof StudentListCommand);
+    }
+
+    @Test
+    public void parseCommand_tutorslot() throws Exception {
+        TimeSlot slot = new TimeSlot("mon-10-12");
+        TutorSlotCommand expected = new TutorSlotCommand(Index.fromOneBased(1), slot);
+        assertEquals(expected, parser.parseCommand(TutorSlotCommand.COMMAND_WORD + " 1 mon-10-12"));
     }
 
     @Test

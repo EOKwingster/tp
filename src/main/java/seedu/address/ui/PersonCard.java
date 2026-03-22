@@ -44,6 +44,8 @@ public class PersonCard extends UiPart<Region> {
     private Label email;
     @FXML
     private FlowPane tags;
+    @FXML
+    private FlowPane availabilityPane;
 
     /**
      * Creates a {@code PersonCard} with the given person and index to display.
@@ -61,6 +63,13 @@ public class PersonCard extends UiPart<Region> {
         String positionText = "(Student)";
         if (person instanceof TeachingStaff staff) {
             positionText = "(" + staff.getPosition().value + ")";
+            staff.getAvailability().stream()
+                    .sorted()
+                    .forEach(slot -> {
+                        Label label = new Label(slot.toDisplayString());
+                        label.getStyleClass().add("availability-tag");
+                        availabilityPane.getChildren().add(label);
+                    });
         }
         position.setText(positionText);
         email.setText(person.getEmail().value);

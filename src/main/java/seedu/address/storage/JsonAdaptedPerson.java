@@ -16,6 +16,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.Position;
 import seedu.address.model.person.TeachingStaff;
+import seedu.address.model.person.TimeSlot;
 import seedu.address.model.person.Username;
 import seedu.address.model.tag.AbstractTag;
 
@@ -38,6 +39,7 @@ class JsonAdaptedPerson {
     private final String type;
     private final String position;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
+    private final List<JsonAdaptedTimeSlot> availability = new ArrayList<>();
 
     /**
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
@@ -46,7 +48,8 @@ class JsonAdaptedPerson {
     public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
             @JsonProperty("email") String email, @JsonProperty("username") String username,
             @JsonProperty("type") String type, @JsonProperty("position") String position,
-            @JsonProperty("tags") List<JsonAdaptedTag> tags) {
+            @JsonProperty("tags") List<JsonAdaptedTag> tags,
+            @JsonProperty("availability") List<JsonAdaptedTimeSlot> availability) {
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -55,6 +58,9 @@ class JsonAdaptedPerson {
         this.position = position;
         if (tags != null) {
             this.tags.addAll(tags);
+        }
+        if (availability != null) {
+            this.availability.addAll(availability);
         }
     }
 
@@ -69,6 +75,9 @@ class JsonAdaptedPerson {
         if (source instanceof TeachingStaff staff) {
             type = TYPE_STAFF;
             position = staff.getPosition().value;
+            availability.addAll(staff.getAvailability().stream()
+                    .map(JsonAdaptedTimeSlot::new)
+                    .collect(Collectors.toList()));
         } else {
             type = TYPE_STUDENT;
             position = null;
@@ -138,7 +147,14 @@ class JsonAdaptedPerson {
 
         if (isStaff) {
             final Position modelPosition = new Position(position);
-            return new TeachingStaff(modelName, modelPhone, modelEmail, modelUsername, modelPosition, modelTags);
+
+            final Set<TimeSlot> modelAvailability = new HashSet<>();
+            for (JsonAdaptedTimeSlot slot : availability) {
+                modelAvailability.add(slot.toModelType());
+            }
+
+            return new TeachingStaff(modelName, modelPhone, modelEmail, modelUsername,
+                    modelPosition, modelTags, modelAvailability);
         }
         return new Person(modelName, modelPhone, modelEmail, modelUsername, modelTags);
     }

@@ -164,6 +164,49 @@ The address book holds a single list of `Person` objects. Two types of persons a
 
 The UI and commands treat both types uniformly as `Person` where possible (e.g. `find`, `delete` by index). The filtered list in the model can show all persons (`list`), only teaching staff (`staffslist`), or only students (`studentslist`) by setting a predicate on the underlying list. `edit` supports an optional `pos/POSITION` field that applies only to teaching staff.
 
+### Tutor Availability Scheduling
+
+#### Overview
+
+Teaching staff members can specify when they are available to teach using the `tutorslot` command. This feature adds a `Set<TimeSlot>` field to the `TeachingStaff` model, where each `TimeSlot` represents a day-of-week and time range (e.g., Monday 10:00–12:00).
+
+#### Implementation
+
+The feature is implemented across the following components:
+
+**Model:**
+* `TimeSlot` — An immutable value object containing a `DayOfWeek`, a `LocalTime` start, and a `LocalTime` end. Supports parsing from string format `DAY-START-END` (e.g., `mon-10-12`). Implements `Comparable<TimeSlot>` for sorted display.
+* `TeachingStaff` — Extended with a `Set<TimeSlot> availability` field. A new constructor accepts availability alongside existing fields. The `getAvailability()` method returns an unmodifiable set.
+
+**Logic:**
+* `TutorSlotCommand` — Takes an `Index` and a `TimeSlot`. On execution, it:
+  1. Retrieves the person at the given index from the filtered list.
+  2. Validates that the person is a `TeachingStaff` instance.
+  3. Checks for duplicate time slots.
+  4. Constructs a new `TeachingStaff` with the slot added (preserving immutability).
+  5. Replaces the old person in the model via `Model#setPerson()`.
+* `TutorSlotCommandParser` — Parses `INDEX SLOT` from user input, delegating to `ParserUtil#parseTimeSlot()` for validation.
+
+**Storage:**
+* `JsonAdaptedTimeSlot` — Serialises a `TimeSlot` as its string representation (e.g., `"mon-10-12"`) using `@JsonValue`.
+* `JsonAdaptedPerson` — Extended with a `List<JsonAdaptedTimeSlot> availability` field, serialised only for staff-type persons.
+
+The following sequence diagram shows how the `tutorslot 1 mon-10-12` command is executed:
+
+![TutorSlotSequenceDiagram](images/TutorSlotSequenceDiagram.png)
+
+#### Design Considerations
+
+**Aspect: Where to store availability**
+
+* **Alternative 1 (current choice):** Store `Set<TimeSlot>` directly in `TeachingStaff`.
+  * Pros: Simple, self-contained. Each staff member owns their availability data.
+  * Cons: Adding a slot requires constructing a new `TeachingStaff` (immutability constraint).
+
+* **Alternative 2:** Store availability in a separate `AvailabilityManager` in the model.
+  * Pros: Decouples availability from the person model; easier to query across all staff.
+  * Cons: Adds complexity; requires cross-referencing persons by identity.
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation
@@ -307,6 +350,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `*`      | user                               | have some customized configuration options             | customize this software to improve my efficiency and comfort           |
 | `* *`    | professor                          | archive a completed semester’s cohort                  | start each new semester with a clean state                             |
 | `*`      | professor                          | record short notes about students                      | recall important context when meeting them again in future semesters   |
+| `* *`    | tutor/professor                    | state when I am available to teach                     | specify my availability so students know when I can teach             |
 
 ### Use cases
 
@@ -415,6 +459,41 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
   * 4b1. Doritus shows an error message describing the validation problem (e.g., invalid characters, duplicate tag).
   * 4b2. User corrects the tag value and re-enters `addtag INDEX TAG`.
+
+    Use case resumes at step 4.
+
+---
+
+**Use case: UC08 – Add availability to a teaching staff member**
+
+**MSS**
+
+1. User lists teaching staff using `staffslist`.
+2. Doritus shows the list of teaching staff.
+3. User identifies the target staff member and notes their index.
+4. User enters `tutorslot INDEX DAY-START-END` (e.g., `tutorslot 1 mon-10-12`).
+5. Doritus adds the time slot to the staff member and shows a success message.
+
+   Use case ends.
+
+**Extensions**
+
+* 4a. The person at the given index is not a teaching staff member.
+
+  * 4a1. Doritus shows an error message indicating the person is not teaching staff.
+
+    Use case resumes at step 4.
+
+* 4b. The time slot format is invalid.
+
+  * 4b1. Doritus shows an error message explaining the valid format (`DAY-START-END`).
+  * 4b2. User re-enters the command with a valid time slot.
+
+    Use case resumes at step 4.
+
+* 4c. The time slot already exists for this staff member.
+
+  * 4c1. Doritus shows an error message indicating the duplicate slot.
 
     Use case resumes at step 4.
 
