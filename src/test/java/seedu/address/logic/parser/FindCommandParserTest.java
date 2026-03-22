@@ -31,8 +31,9 @@ public class FindCommandParserTest {
     @Test
     public void parse_validArgs_returnsFindCommand() {
         // no leading and trailing whitespaces
-        FindCommand expectedFindCommand = new FindCommand(
-                new NameContainsKeywordsPredicate(Arrays.asList("Alice", "Bob")));
+        FindCommand.FindPersonDescriptor fd = new FindCommand.FindPersonDescriptor();
+        fd.setName(Set.of("Alice", "Bob"));
+        FindCommand expectedFindCommand = new FindCommand(fd);
         assertParseSuccess(parser, "Alice Bob", expectedFindCommand);
 
         // multiple whitespaces between keywords
@@ -42,9 +43,10 @@ public class FindCommandParserTest {
     @Test
     public void parse_validArgsWithTag_returnsFindCommand() {
         // name keywords with tag
-        FindCommand expectedFindCommand = new FindCommand(
-                new NameContainsKeywordsPredicate(Arrays.asList("Alice", "Bob")),
-                new TagsContainsTagPredicate(Set.of(new Tag("friends"))));
+        FindCommand.FindPersonDescriptor fd = new FindCommand.FindPersonDescriptor();
+        fd.setName(Set.of("Alice", "Bob"));
+        fd.setTags(Set.of(new Tag("friends")));
+        FindCommand expectedFindCommand = new FindCommand(fd);
         assertParseSuccess(parser, "Alice Bob t/friends", expectedFindCommand);
 
         // multiple whitespaces with tags
@@ -54,9 +56,9 @@ public class FindCommandParserTest {
     @Test
     public void parse_validArgsWithTagOnly_returnsFindCommand() {
         // tag only, no name keywords
-        FindCommand expectedFindCommand = new FindCommand(
-                null,
-                new TagsContainsTagPredicate(Set.of(new Tag("friends"))));
+        FindCommand.FindPersonDescriptor fd = new FindCommand.FindPersonDescriptor();
+        fd.setTags(Set.of(new Tag("friends")));
+        FindCommand expectedFindCommand = new FindCommand(fd);
         assertParseSuccess(parser, " t/friends", expectedFindCommand);
     }
 
