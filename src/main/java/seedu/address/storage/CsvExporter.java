@@ -42,7 +42,7 @@ public class CsvExporter {
      *                              - the file path is invalid
      * @throws NullPointerException if the model is null
      */
-    public static void exportContacts(Model model, String filePath) throws IOException {
+    public static String exportContacts(Model model, String filePath) throws IOException {
         requireNonNull(model);
         List<Person> persons = model.getFilteredPersonList();
         String contents = HEADERS + persons.stream()
@@ -53,6 +53,7 @@ public class CsvExporter {
         }
         Path path = Paths.get(filePath);
         Files.writeString(path, contents);
+        return filePath;
     }
 
     /**
