@@ -90,8 +90,8 @@ public class FindCommand extends Command {
     public static class FindPersonDescriptor {
         private static final Predicate<Person> PREDICATE_TRUE = x -> true;
         private Set<String> name;
-        private Set<Phone> phone;
-        private Set<Email> email;
+        private Set<String> phone;
+        private Set<String> email;
         private Set<AbstractTag> tags;
 
         public FindPersonDescriptor() {}
@@ -119,19 +119,19 @@ public class FindCommand extends Command {
             return (name != null) ? new NameContainsKeywordsPredicate(new ArrayList<>(name)) : PREDICATE_TRUE;
         }
 
-        public void setPhone(Set<Phone> phone) {
+        public void setPhone(Set<String> phone) {
             this.phone = phone;
         }
 
-        public Optional<Set<Phone>> getPhone() {
+        public Optional<Set<String>> getPhone() {
             return Optional.ofNullable(phone).map(Collections::unmodifiableSet);
         }
 
-        public void setEmail(Set<Email> email) {
+        public void setEmail(Set<String> email) {
             this.email = email;
         }
 
-        public Optional<Set<Email>> getEmail() {
+        public Optional<Set<String>> getEmail() {
             return Optional.ofNullable(email).map(Collections::unmodifiableSet);
         }
 
