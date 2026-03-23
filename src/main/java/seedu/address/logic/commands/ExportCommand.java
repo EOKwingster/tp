@@ -64,10 +64,9 @@ public class ExportCommand extends Command {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof ExportCommand)) {
+        if (!(other instanceof ExportCommand otherExportCommand)) {
             return false;
         }
-        ExportCommand otherExportCommand = (ExportCommand) other;
         return Objects.equals(otherExportCommand.filePath, this.filePath);
     }
 

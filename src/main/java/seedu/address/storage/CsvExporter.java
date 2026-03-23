@@ -97,9 +97,7 @@ public class CsvExporter {
                 .stream()
                 .map(tag -> tag.getTagName())
                 .collect(Collectors.joining(";")) + ",");
-        if (person instanceof TeachingStaff) {
-            TeachingStaff staff = (TeachingStaff) person;
-
+        if (person instanceof TeachingStaff staff) {
             sb.append(staff.getPosition() + ",");
             sb.append(staff
                     .getAvailability()
