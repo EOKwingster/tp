@@ -4,29 +4,37 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_FRIEND;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.AddCommand;
+import seedu.address.logic.commands.AddTagCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FindCommand;
+import seedu.address.logic.commands.FindCommand.FindPersonDescriptor;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.StaffListCommand;
 import seedu.address.logic.commands.StudentListCommand;
+import seedu.address.logic.commands.TutorSlotCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.TimeSlot;
+import seedu.address.model.tag.Tag;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.PersonUtil;
@@ -40,6 +48,14 @@ public class AddressBookParserTest {
         Person person = new PersonBuilder().build();
         AddCommand command = (AddCommand) parser.parseCommand(PersonUtil.getAddCommand(person));
         assertEquals(new AddCommand(person), command);
+    }
+
+    @Test
+    public void parseCommand_addTag() throws Exception {
+        AddTagCommand command = (AddTagCommand) parser
+                .parseCommand(AddTagCommand.COMMAND_WORD + " 1 " + PREFIX_TAG + VALID_TAG_FRIEND);
+        var targetCmd = new AddTagCommand(INDEX_FIRST_PERSON, new HashSet<>(List.of(new Tag(VALID_TAG_FRIEND))));
+        assertEquals(targetCmd, command);
     }
 
     @Test
@@ -75,7 +91,9 @@ public class AddressBookParserTest {
         List<String> keywords = Arrays.asList("foo", "bar", "baz");
         FindCommand command = (FindCommand) parser.parseCommand(
                 FindCommand.COMMAND_WORD + " " + keywords.stream().collect(Collectors.joining(" ")));
-        assertEquals(new FindCommand(new NameContainsKeywordsPredicate(keywords)), command);
+        FindPersonDescriptor fd = new FindPersonDescriptor();
+        fd.setName(new HashSet<>(keywords));
+        assertEquals(new FindCommand(fd), command);
     }
 
     @Test
@@ -100,6 +118,13 @@ public class AddressBookParserTest {
     public void parseCommand_studentslist() throws Exception {
         assertTrue(parser.parseCommand(StudentListCommand.COMMAND_WORD) instanceof StudentListCommand);
         assertTrue(parser.parseCommand(StudentListCommand.COMMAND_WORD + " 2") instanceof StudentListCommand);
+    }
+
+    @Test
+    public void parseCommand_tutorslot() throws Exception {
+        TimeSlot slot = new TimeSlot("mon-10-12");
+        TutorSlotCommand expected = new TutorSlotCommand(Index.fromOneBased(1), slot);
+        assertEquals(expected, parser.parseCommand(TutorSlotCommand.COMMAND_WORD + " 1 mon-10-12"));
     }
 
     @Test

@@ -1,0 +1,28 @@
+@startuml
+!include ../style.puml
+skinparam ClassFontColor #000000
+skinparam ClassBorderColor #000000
+skinparam ClassBackgroundColor #FFFFAA
+
+title Example: Benson Meier's availability after two tutorslot commands
+
+object "benson:TeachingStaff" as benson {
+    name = "Benson Meier"
+    position = "Professors"
+}
+
+object "slot1:TimeSlot" as slot1 {
+    day = MONDAY
+    start = 10:00
+    end = 12:00
+}
+
+object "slot2:TimeSlot" as slot2 {
+    day = WEDNESDAY
+    start = 14:00
+    end = 16:00
+}
+
+benson --> slot1 : availability
+benson --> slot2 : availability
+@enduml

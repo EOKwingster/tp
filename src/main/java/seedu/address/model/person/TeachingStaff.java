@@ -3,6 +3,7 @@ package seedu.address.model.person;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ import seedu.address.model.tag.AbstractTag;
 
 /**
  * Represents a Teaching Staff member in the address book.
- * Extends Person with an additional position field.
+ * Extends Person with an additional position field and availability time slots.
  * Teaching staff have position "Teaching Assistant" by default.
  * Guarantees: details are present and not null, field values are validated, immutable.
  */
@@ -32,6 +33,7 @@ public non-sealed class TeachingStaff extends Person {
     private static final String DEFAULT_USERNAME_PREFIX = "staff";
 
     protected Position position;
+    protected Set<TimeSlot> availability = new HashSet<>();
 
     /**
      * Constructs teaching staff with name only; phone, email, username and position use defaults.
@@ -70,6 +72,17 @@ public non-sealed class TeachingStaff extends Person {
         this.position = position;
     }
 
+    /**
+     * Full constructor including availability time slots.
+     */
+    public <T extends AbstractTag> TeachingStaff(Name name, Phone phone, Email email, Username username,
+                         Position position, Set<T> tags, Set<TimeSlot> availability) {
+        super(name, phone, email, username, tags);
+        requireAllNonNull(position, availability);
+        this.position = position;
+        this.availability.addAll(availability);
+    }
+
     private static Phone defaultPhoneForName(Name name) {
         int code = Math.abs(name.fullName.hashCode()) % DEFAULT_PHONE_MODULO;
         return new Phone(String.format(DEFAULT_PHONE_PREFIX + "%07d", code));
@@ -96,6 +109,13 @@ public non-sealed class TeachingStaff extends Person {
         return position;
     }
 
+    /**
+     * Returns an immutable set of availability time slots.
+     */
+    public Set<TimeSlot> getAvailability() {
+        return Collections.unmodifiableSet(availability);
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {
@@ -108,12 +128,13 @@ public non-sealed class TeachingStaff extends Person {
 
         TeachingStaff otherStaff = (TeachingStaff) other;
         return super.equals(otherStaff)
-                && position.equals(otherStaff.position);
+                && position.equals(otherStaff.position)
+                && availability.equals(otherStaff.availability);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, phone, email, username, position, tags);
+        return Objects.hash(name, phone, email, username, position, tags, availability);
     }
 
     @Override
@@ -125,6 +146,7 @@ public non-sealed class TeachingStaff extends Person {
                 .add("username", username)
                 .add("position", position)
                 .add("tags", tags)
+                .add("availability", availability)
                 .toString();
     }
 }

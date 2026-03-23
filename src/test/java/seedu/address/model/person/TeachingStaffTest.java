@@ -1,0 +1,79 @@
+package seedu.address.model.person;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.junit.jupiter.api.Test;
+
+import seedu.address.model.tag.Tag;
+import seedu.address.testutil.PersonBuilder;
+
+public class TeachingStaffTest {
+
+    @Test
+    public void constructor_nameOnly_usesDefaults() {
+        Name name = new Name("Alex Tan");
+        TeachingStaff staff = new TeachingStaff(name);
+        assertEquals(name, staff.getName());
+        assertEquals(new Position(TeachingStaff.DEFAULT_POSITION_VALUE), staff.getPosition());
+        assertTrue(staff.getAvailability().isEmpty());
+    }
+
+    @Test
+    public void constructor_nameAndTags_usesDefaults() {
+        Name name = new Name("Ben Lee");
+        Set<Tag> tags = new HashSet<>();
+        tags.add(new Tag("colleagues"));
+        TeachingStaff staff = new TeachingStaff(name, tags);
+        assertEquals(name, staff.getName());
+        assertTrue(staff.getTags().contains(new Tag("colleagues")));
+    }
+
+    @Test
+    public void equals_differentType_returnsFalse() {
+        Person student = new PersonBuilder().withName("Student").build();
+        TeachingStaff staff = (TeachingStaff) new PersonBuilder().withName("Staff")
+                .withPosition(Position.PROFESSORS).build();
+        assertFalse(staff.equals(student));
+        assertFalse(student.equals(staff));
+    }
+
+    @Test
+    public void equals_sameStaff_returnsTrue() {
+        TeachingStaff a = (TeachingStaff) new PersonBuilder().withName("Dana")
+                .withPosition(Position.PROFESSORS).build();
+        TeachingStaff b = (TeachingStaff) new PersonBuilder().withName("Dana")
+                .withPosition(Position.PROFESSORS).build();
+        assertEquals(a, b);
+    }
+
+    @Test
+    public void equals_differentAvailability_returnsFalse() {
+        Name name = new Name("Eve");
+        Phone phone = new Phone("81234567");
+        Email email = new Email("eve@example.com");
+        Username u = new Username("eve");
+        Position pos = new Position(Position.TEACHING_ASSISTANT);
+        Set<Tag> tags = Collections.emptySet();
+        Set<TimeSlot> slotsA = Set.of(new TimeSlot("mon-10-12"));
+        Set<TimeSlot> slotsB = Set.of(new TimeSlot("tue-10-12"));
+        TeachingStaff a = new TeachingStaff(name, phone, email, u, pos, tags, slotsA);
+        TeachingStaff b = new TeachingStaff(name, phone, email, u, pos, tags, slotsB);
+        assertNotEquals(a, b);
+    }
+
+    @Test
+    public void toString_containsFields() {
+        TeachingStaff staff = (TeachingStaff) new PersonBuilder().withName("Frank")
+                .withPosition(Position.TEACHING_ASSISTANT).build();
+        String s = staff.toString();
+        assertTrue(s.contains("Frank"));
+        assertTrue(s.contains(Position.TEACHING_ASSISTANT));
+    }
+}

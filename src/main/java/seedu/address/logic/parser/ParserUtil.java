@@ -13,6 +13,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.Position;
+import seedu.address.model.person.TimeSlot;
 import seedu.address.model.person.Username;
 import seedu.address.model.tag.AbstractTag;
 import seedu.address.model.tag.TagFactory;
@@ -125,6 +126,21 @@ public class ParserUtil {
         } catch (IllegalArgumentException e) {
             throw new ParseException(e.getMessage());
         }
+    }
+
+    /**
+     * Parses a {@code String slot} into a {@code TimeSlot}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code slot} is invalid.
+     */
+    public static TimeSlot parseTimeSlot(String slot) throws ParseException {
+        requireNonNull(slot);
+        String trimmedSlot = slot.trim();
+        if (!TimeSlot.isValidTimeSlot(trimmedSlot)) {
+            throw new ParseException(TimeSlot.MESSAGE_CONSTRAINTS);
+        }
+        return new TimeSlot(trimmedSlot);
     }
 
     /**

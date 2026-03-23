@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import seedu.address.logic.parser.Prefix;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.TeachingStaff;
+import seedu.address.model.person.TimeSlot;
 
 /**
  * Container for user visible messages.
@@ -47,9 +48,18 @@ public class Messages {
         if (person instanceof TeachingStaff staff) {
             builder.append("; Position: ")
                     .append(staff.getPosition());
+            if (!staff.getAvailability().isEmpty()) {
+                builder.append("; Availability: ");
+                staff.getAvailability().stream()
+                        .sorted()
+                        .map(TimeSlot::toDisplayString)
+                        .forEach(s -> builder.append("[").append(s).append("] "));
+            }
         }
         builder.append("; Tags: ");
-        person.getTags().forEach(builder::append);
+        person.getTags().stream()
+                .sorted(java.util.Comparator.comparing(Object::toString))
+                .forEach(builder::append);
         return builder.toString();
     }
 

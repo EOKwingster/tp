@@ -18,6 +18,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.Position;
+import seedu.address.model.person.TimeSlot;
 import seedu.address.model.person.Username;
 import seedu.address.model.tag.AbstractTag;
 import seedu.address.model.tag.Tag;
@@ -235,5 +236,22 @@ public class ParserUtilTest {
         Set<AbstractTag> expectedTagSet = new HashSet<>(Arrays.asList(new Tag(VALID_TAG_1), new Tag(VALID_TAG_2)));
 
         assertEquals(expectedTagSet, actualTagSet);
+    }
+
+    @Test
+    public void parseTimeSlot_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseTimeSlot(null));
+    }
+
+    @Test
+    public void parseTimeSlot_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseTimeSlot("mon-12-10"));
+    }
+
+    @Test
+    public void parseTimeSlot_validValue_returnsTimeSlot() throws Exception {
+        TimeSlot expected = new TimeSlot("mon-10-12");
+        assertEquals(expected, ParserUtil.parseTimeSlot("mon-10-12"));
+        assertEquals(expected, ParserUtil.parseTimeSlot("  mon-10-12  "));
     }
 }

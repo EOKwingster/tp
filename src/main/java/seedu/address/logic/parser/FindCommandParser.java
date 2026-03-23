@@ -3,13 +3,13 @@ package seedu.address.logic.parser;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import seedu.address.logic.commands.FindCommand;
+import seedu.address.logic.commands.FindCommand.FindPersonDescriptor;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.NameContainsKeywordsPredicate;
-import seedu.address.model.person.TagsContainsTagPredicate;
 import seedu.address.model.tag.AbstractTag;
 
 /**
@@ -38,17 +38,14 @@ public class FindCommandParser implements Parser<FindCommand> {
 
         String[] nameKeywords = preamble.isEmpty() ? new String[0] : preamble.split("\\s+");
 
-        NameContainsKeywordsPredicate namePredicate = null;
-        TagsContainsTagPredicate tagPredicate = null;
-
+        FindPersonDescriptor fd = new FindPersonDescriptor();
         if (!preamble.isEmpty()) {
-            namePredicate = new NameContainsKeywordsPredicate(Arrays.asList(nameKeywords));
+            fd.setName(new HashSet<>(List.of(nameKeywords)));
         }
         if (!tagList.isEmpty()) {
-            tagPredicate = new TagsContainsTagPredicate(tagList);
+            fd.setTags(tagList);
         }
-
-        return new FindCommand(namePredicate, tagPredicate);
+        return new FindCommand(fd);
     }
 
 }

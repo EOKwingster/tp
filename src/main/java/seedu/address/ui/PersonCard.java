@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.TeachingStaff;
+import seedu.address.model.tag.TagType;
 
 /**
  * An UI component that displays information of a {@code Person}.
@@ -43,6 +44,8 @@ public class PersonCard extends UiPart<Region> {
     private Label email;
     @FXML
     private FlowPane tags;
+    @FXML
+    private FlowPane availabilityPane;
 
     /**
      * Creates a {@code PersonCard} with the given person and index to display.
@@ -60,11 +63,31 @@ public class PersonCard extends UiPart<Region> {
         String positionText = "(Student)";
         if (person instanceof TeachingStaff staff) {
             positionText = "(" + staff.getPosition().value + ")";
+            staff.getAvailability().stream()
+                    .sorted()
+                    .forEach(slot -> {
+                        Label label = new Label(slot.toDisplayString());
+                        label.getStyleClass().add("availability-tag");
+                        availabilityPane.getChildren().add(label);
+                    });
         }
         position.setText(positionText);
         email.setText(person.getEmail().value);
         person.getTags().stream()
-                .sorted(Comparator.comparing(tag -> tag.tagName))
-                .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+                .sorted(Comparator.comparing(tag -> tag.getTagType().getUiPriority()))
+                .forEach(tag -> {
+                    Label label = new Label(tag.tagName);
+                    label.getStyleClass().add(getStyleClassForTagType(tag.getTagType()));
+                    tags.getChildren().add(label);
+                });
+    }
+
+    private String getStyleClassForTagType(TagType tagType) {
+        return switch (tagType) {
+        case TAG -> "default-tag";
+        case TUTORIAL -> "tutorial-tag";
+        case LAB -> "lab-tag";
+        case COURSE -> "course-tag";
+        };
     }
 }

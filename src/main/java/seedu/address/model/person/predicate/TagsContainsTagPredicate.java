@@ -1,9 +1,10 @@
-package seedu.address.model.person;
+package seedu.address.model.person.predicate;
 
 import java.util.Set;
 import java.util.function.Predicate;
 
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.person.Person;
 import seedu.address.model.tag.AbstractTag;
 
 /**
@@ -18,7 +19,7 @@ public class TagsContainsTagPredicate implements Predicate<Person> {
 
     @Override
     public boolean test(Person person) {
-        return person.tags.stream().anyMatch(tag -> tags.contains(tag));
+        return tags.stream().anyMatch(tag -> person.containsTag(tag));
     }
 
     @Override

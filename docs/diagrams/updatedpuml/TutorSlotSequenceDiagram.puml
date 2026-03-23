@@ -1,0 +1,80 @@
+@startuml
+!include ../style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":TutorSlotCommandParser" as TutorSlotCommandParser LOGIC_COLOR
+participant "t:TutorSlotCommand" as TutorSlotCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("tutorslot 1 mon-10-12")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(...)
+activate AddressBookParser
+
+create TutorSlotCommandParser
+AddressBookParser -> TutorSlotCommandParser
+activate TutorSlotCommandParser
+
+TutorSlotCommandParser --> AddressBookParser
+deactivate TutorSlotCommandParser
+
+AddressBookParser -> TutorSlotCommandParser : parse(...)
+activate TutorSlotCommandParser
+
+note right of TutorSlotCommandParser: Parses index and time slot
+
+create TutorSlotCommand
+TutorSlotCommandParser -> TutorSlotCommand
+activate TutorSlotCommand
+
+TutorSlotCommand --> TutorSlotCommandParser
+deactivate TutorSlotCommand
+
+TutorSlotCommandParser --> AddressBookParser : t
+deactivate TutorSlotCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+TutorSlotCommandParser -[hidden]-> AddressBookParser
+destroy TutorSlotCommandParser
+
+AddressBookParser --> LogicManager : t
+deactivate AddressBookParser
+
+LogicManager -> TutorSlotCommand : execute(m)
+activate TutorSlotCommand
+
+TutorSlotCommand -> Model : getFilteredPersonList()
+activate Model
+
+Model --> TutorSlotCommand : personList
+deactivate Model
+
+note right of TutorSlotCommand: Validates TeachingStaff type\nand no duplicate slot
+
+TutorSlotCommand -> Model : setPerson(target, updatedStaff)
+activate Model
+
+Model --> TutorSlotCommand
+deactivate Model
+
+create CommandResult
+TutorSlotCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> TutorSlotCommand
+deactivate CommandResult
+
+TutorSlotCommand --> LogicManager : r
+deactivate TutorSlotCommand
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml

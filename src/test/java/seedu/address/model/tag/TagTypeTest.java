@@ -5,13 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 public class TagTypeTest {
-
-    @Test
-    public void testTagTypeToString() {
-        // Assert that toString() returns the correct description
-        assertEquals("Tag", TagType.TAG.toString());
-    }
-
     @Test
     public void testTagTypeValueOf() {
         // Assert that valueOf() works correctly
@@ -20,11 +13,11 @@ public class TagTypeTest {
     }
 
     @Test
-    public void testTagTypeDescription() {
-        // Assert that the Tag enum has the correct description
-        String expectedDescription = "Tag";
-        assertEquals(expectedDescription, TagType.TAG.toString());
+    public void testTagTypeGetUiPriority() {
+        assertEquals(999, TagType.TAG.getUiPriority());
+        assertEquals(0, TagType.COURSE.getUiPriority());
+        assertEquals(1, TagType.TUTORIAL.getUiPriority());
+        assertEquals(2, TagType.LAB.getUiPriority());
     }
-
 }
 

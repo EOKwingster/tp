@@ -29,8 +29,7 @@ public class MutablePersonTest {
     @BeforeEach
     public void setup() {
         mutablePerson = new MutablePerson(new Name(VALID_NAME_AMY), new Phone(VALID_PHONE_AMY),
-                new Email(VALID_EMAIL_AMY), new Username(VALID_USERNAME_AMY),
-                new HashSet<>());
+                new Email(VALID_EMAIL_AMY), new Username(VALID_USERNAME_AMY), new HashSet<>());
     }
 
     @Test

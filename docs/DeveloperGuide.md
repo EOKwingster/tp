@@ -91,12 +91,25 @@ Here's a (partial) class diagram of the `Logic` component:
 
 <img src="images/LogicClassDiagram.png" width="550"/>
 
-The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` API call as an example.
+The sequence diagrams below illustrate the interactions within the `Logic` component for representative commands.
+
+`execute("delete 1")`:
 
 ![Interactions Inside the Logic Component for the `delete 1` Command](images/DeleteSequenceDiagram.png)
 
 <div markdown="span" class="alert alert-info">:information_source: **Note:** The lifeline for `DeleteCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
 </div>
+
+`execute("add n/John ...")`:
+
+![Interactions Inside the Logic Component for the `add` Command](images/AddSequenceDiagram.png)
+
+<div markdown="span" class="alert alert-info">:information_source: **Note:** The lifeline for `AddCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
+</div>
+
+`execute("list")`:
+
+![Interactions Inside the Logic Component for the `list` Command](images/ListSequenceDiagram.png)
 
 How the `Logic` component works:
 
@@ -117,7 +130,7 @@ How the parsing works:
 ### Model component
 **API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
 
-<img src="images/ModelClassDiagram.png" width="450" />
+<img src="images/ModelClassDiagram.png" width="500" />
 
 
 The `Model` component,
@@ -163,6 +176,75 @@ The address book holds a single list of `Person` objects. Two types of persons a
 * **Teaching staff** — `TeachingStaff` instances (extend `Person`) with an additional `Position` field. Added with `add staff n/NAME` (name only; phone, email, username and position default) or `add staff n/NAME p/... e/... u/... pos/POSITION` (all fields). `Position` is restricted to "Teaching Assistant" or "Professors".
 
 The UI and commands treat both types uniformly as `Person` where possible (e.g. `find`, `delete` by index). The filtered list in the model can show all persons (`list`), only teaching staff (`staffslist`), or only students (`studentslist`) by setting a predicate on the underlying list. `edit` supports an optional `pos/POSITION` field that applies only to teaching staff.
+
+### Tutor Availability Scheduling
+
+#### Overview
+
+Teaching staff members can specify when they are available to teach using the `tutorslot` command. This feature adds a `Set<TimeSlot>` field to the `TeachingStaff` model, where each `TimeSlot` represents a day-of-week and time range (e.g., Monday 10:00–12:00).
+
+#### Implementation
+
+The feature is implemented across the following components:
+
+**Model:**
+* `TimeSlot` — An immutable value object containing a `DayOfWeek`, a `LocalTime` start, and a `LocalTime` end. Supports parsing from string format `DAY-START-END` (e.g., `mon-10-12`). Implements `Comparable<TimeSlot>` for sorted display.
+* `TeachingStaff` — Extended with a `Set<TimeSlot> availability` field. A new constructor accepts availability alongside existing fields. The `getAvailability()` method returns an unmodifiable set.
+
+**Logic:**
+* `TutorSlotCommand` — Takes an `Index` and a `TimeSlot`. On execution, it:
+  1. Retrieves the person at the given index from the filtered list.
+  2. Validates that the person is a `TeachingStaff` instance.
+  3. Checks for duplicate time slots.
+  4. Constructs a new `TeachingStaff` with the slot added (preserving immutability).
+  5. Replaces the old person in the model via `Model#setPerson()`.
+* `TutorSlotCommandParser` — Parses `INDEX SLOT` from user input, delegating to `ParserUtil#parseTimeSlot()` for validation.
+
+**Storage:**
+* `JsonAdaptedTimeSlot` — Serialises a `TimeSlot` as its string representation (e.g., `"mon-10-12"`) using `@JsonValue`.
+* `JsonAdaptedPerson` — Extended with a `List<JsonAdaptedTimeSlot> availability` field, serialised only for staff-type persons.
+
+The following activity diagram summarises the decision flow when `tutorslot` is executed:
+
+![TutorSlotActivityDiagram](images/TutorSlotActivityDiagram.png)
+
+The following sequence diagram shows how the `tutorslot 1 mon-10-12` command flows through the `Logic` component:
+
+![TutorSlotSequenceDiagram](images/TutorSlotSequenceDiagram.png)
+
+<div markdown="span" class="alert alert-info">:information_source: **Note:** The lifeline for `TutorSlotCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of the diagram.
+</div>
+
+The object diagram below shows an example state of a `TeachingStaff` object after two `tutorslot` commands have been executed:
+
+![TutorAvailabilityObjectDiagram](images/TutorAvailabilityObjectDiagram.png)
+
+#### Viewing Availability: `tutordashboard`
+
+The `TutorDashboardCommand` is a read-only command that produces a formatted availability summary for all teaching staff.
+
+Key design decisions:
+
+* **Reads from the full address book** (`model.getAddressBook().getPersonList()`), not the filtered list. This ensures the dashboard is always complete even when the user has filtered to show only students.
+* **Sorted display** — slots for each staff member are inserted into a `TreeSet`, which uses `TimeSlot`'s natural ordering (day-of-week first, then start time) via its `Comparable` implementation.
+* **No model mutation** — the command produces only a `CommandResult`; it does not modify any data.
+* **No parser needed** — the command takes no arguments and is returned directly by `AddressBookParser`.
+
+The following sequence diagram shows how the `tutordashboard` command is executed:
+
+![TutorDashboardSequenceDiagram](images/TutorDashboardSequenceDiagram.png)
+
+#### Design Considerations
+
+**Aspect: Where to store availability**
+
+* **Alternative 1 (current choice):** Store `Set<TimeSlot>` directly in `TeachingStaff`.
+  * Pros: Simple, self-contained. Each staff member owns their availability data.
+  * Cons: Adding a slot requires constructing a new `TeachingStaff` (immutability constraint).
+
+* **Alternative 2:** Store availability in a separate `AvailabilityManager` in the model.
+  * Pros: Decouples availability from the person model; easier to query across all staff.
+  * Cons: Adds complexity; requires cross-referencing persons by identity.
 
 ### \[Proposed\] Undo/redo feature
 
@@ -307,6 +389,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `*`      | user                               | have some customized configuration options             | customize this software to improve my efficiency and comfort           |
 | `* *`    | professor                          | archive a completed semester’s cohort                  | start each new semester with a clean state                             |
 | `*`      | professor                          | record short notes about students                      | recall important context when meeting them again in future semesters   |
+| `* *`    | tutor/professor                    | state when I am available to teach                     | specify my availability so students know when I can teach             |
+| `* *`    | tutor/professor                    | view the availability of all tutors in one place       | see who is able to teach at a glance                                  |
 
 ### Use cases
 
@@ -417,6 +501,66 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   * 4b2. User corrects the tag value and re-enters `addtag INDEX TAG`.
 
     Use case resumes at step 4.
+
+---
+
+**Use case: UC08 – Add availability to a teaching staff member**
+
+**MSS**
+
+1. User lists teaching staff using `staffslist`.
+2. Doritus shows the list of teaching staff.
+3. User identifies the target staff member and notes their index.
+4. User enters `tutorslot INDEX DAY-START-END` (e.g., `tutorslot 1 mon-10-12`).
+5. Doritus adds the time slot to the staff member and shows a success message.
+
+   Use case ends.
+
+**Extensions**
+
+* 4a. The person at the given index is not a teaching staff member.
+
+  * 4a1. Doritus shows an error message indicating the person is not teaching staff.
+
+    Use case resumes at step 4.
+
+* 4b. The time slot format is invalid.
+
+  * 4b1. Doritus shows an error message explaining the valid format (`DAY-START-END`).
+  * 4b2. User re-enters the command with a valid time slot.
+
+    Use case resumes at step 4.
+
+* 4c. The time slot already exists for this staff member.
+
+  * 4c1. Doritus shows an error message indicating the duplicate slot.
+
+    Use case resumes at step 4.
+
+---
+
+**Use case: UC09 – View tutor availability dashboard**
+
+**MSS**
+
+1. User enters `tutordashboard`.
+2. Doritus displays a numbered list of all teaching staff, each with their available time slots sorted by day and start time.
+
+   Use case ends.
+
+**Extensions**
+
+* 2a. There are no teaching staff in the address book.
+
+  * 2a1. Doritus shows a message indicating no teaching staff were found.
+
+    Use case ends.
+
+* 2b. A teaching staff member has no time slots set.
+
+  * 2b1. Doritus shows `(no slots set)` for that staff member.
+
+    Use case continues from step 2 for remaining staff.
 
 ---
 
@@ -533,6 +677,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 * **Position**: The role of a teaching staff member; only "Teaching Assistant" and "Professors" are allowed.
 * **Tag**: A short label attached to a contact (e.g., module code, tutorial group, lab group) used for grouping and filtering contacts.
 * **Tutorial group / Lab group**: A subgroup of students within a module, usually associated with a specific weekly session; commonly represented as tags in Doritus.
+* **Time slot**: A day-of-week and hour range (e.g., Monday 10:00–12:00) representing when a teaching staff member is available to teach. Stored as `TimeSlot` objects in a `Set<TimeSlot>` on each `TeachingStaff`. Added with `tutorslot`; viewed with `tutordashboard`.
 * **Mainstream OS**: Windows, Linux, macOS.
 
 --------------------------------------------------------------------------------------------------------------------

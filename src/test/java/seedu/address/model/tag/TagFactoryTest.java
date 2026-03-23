@@ -18,11 +18,11 @@ import seedu.address.model.tag.restricted.TutorialTagSchemaTest;
  * Integration tests for {@link TagFactory}.
  */
 public class TagFactoryTest {
-    private static final String VALID_TUTORIAL_FULL_TAG = TutorialTagSchema.VARIANT + RestrictedTag.DELIMITER
+    public static final String VALID_TUTORIAL_FULL_TAG = TutorialTagSchema.VARIANT + RestrictedTag.DELIMITER
             + TutorialTagSchemaTest.VALID_TUTORIAL_TAG;
-    private static final String VALID_LAB_FULL_TAG = LabTagSchema.VARIANT + RestrictedTag.DELIMITER
+    public static final String VALID_LAB_FULL_TAG = LabTagSchema.VARIANT + RestrictedTag.DELIMITER
             + LabTagSchemaTest.VALID_LAB_TAG;
-    private static final String VALID_COURSE_FULL_TAG = CourseTagSchema.VARIANT + RestrictedTag.DELIMITER
+    public static final String VALID_COURSE_FULL_TAG = CourseTagSchema.VARIANT + RestrictedTag.DELIMITER
             + CourseTagSchemaTest.VALID_COURSE_TAG;
 
     @Test

@@ -14,15 +14,15 @@ import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.logic.commands.FindCommand.FindPersonDescriptor;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.person.NameContainsKeywordsPredicate;
-import seedu.address.model.person.TagsContainsTagPredicate;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -35,19 +35,21 @@ public class FindCommandTest {
 
     @Test
     public void equals() {
-        NameContainsKeywordsPredicate firstPredicate = new NameContainsKeywordsPredicate(
-                Collections.singletonList("first"));
-        NameContainsKeywordsPredicate secondPredicate = new NameContainsKeywordsPredicate(
-                Collections.singletonList("second"));
+        FindPersonDescriptor firstFd = new FindPersonDescriptor();
+        firstFd.setName(new HashSet<>(Collections.singletonList("first")));
 
-        FindCommand findFirstCommand = new FindCommand(firstPredicate);
-        FindCommand findSecondCommand = new FindCommand(secondPredicate);
+        FindPersonDescriptor secondFd = new FindPersonDescriptor();
+        secondFd.setName(new HashSet<>(Collections.singletonList("second")));
+
+
+        FindCommand findFirstCommand = new FindCommand(firstFd);
+        FindCommand findSecondCommand = new FindCommand(secondFd);
 
         // same object -> returns true
         assertTrue(findFirstCommand.equals(findFirstCommand));
 
         // same values -> returns true
-        FindCommand findFirstCommandCopy = new FindCommand(firstPredicate);
+        FindCommand findFirstCommandCopy = new FindCommand(firstFd);
         assertTrue(findFirstCommand.equals(findFirstCommandCopy));
 
         // different types -> returns false
@@ -63,9 +65,10 @@ public class FindCommandTest {
     @Test
     public void execute_zeroKeywords_noPersonFound() {
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 0);
-        NameContainsKeywordsPredicate predicate = preparePredicate(" ");
-        FindCommand command = new FindCommand(predicate);
-        expectedModel.updateFilteredPersonList(predicate);
+        FindPersonDescriptor fd = new FindPersonDescriptor();
+        fd.setName(processInput(" "));
+        FindCommand command = new FindCommand(fd);
+        expectedModel.updateFilteredPersonList(fd.getNamePredicate());
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
         assertEquals(Collections.emptyList(), model.getFilteredPersonList());
     }
@@ -73,9 +76,10 @@ public class FindCommandTest {
     @Test
     public void execute_multipleKeywords_multiplePersonsFound() {
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 3);
-        NameContainsKeywordsPredicate predicate = preparePredicate("Kurz Elle Kunz");
-        FindCommand command = new FindCommand(predicate);
-        expectedModel.updateFilteredPersonList(predicate);
+        FindPersonDescriptor fd = new FindPersonDescriptor();
+        fd.setName(processInput("Kurz Elle Kunz"));
+        FindCommand command = new FindCommand(fd);
+        expectedModel.updateFilteredPersonList(fd.getNamePredicate());
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
         assertEquals(Arrays.asList(CARL, ELLE, FIONA), model.getFilteredPersonList());
     }
@@ -83,9 +87,10 @@ public class FindCommandTest {
     @Test
     public void execute_substringKeyword_personFound() {
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 2);
-        NameContainsKeywordsPredicate predicate = preparePredicate("el");
-        FindCommand command = new FindCommand(predicate);
-        expectedModel.updateFilteredPersonList(predicate);
+        FindPersonDescriptor fd = new FindPersonDescriptor();
+        fd.setName(processInput("el"));
+        FindCommand command = new FindCommand(fd);
+        expectedModel.updateFilteredPersonList(fd.getNamePredicate());
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
         assertEquals(Arrays.asList(DANIEL, ELLE), model.getFilteredPersonList());
     }
@@ -93,9 +98,10 @@ public class FindCommandTest {
     @Test
     public void execute_substringKeywordCaseInsensitive_personFound() {
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 2);
-        NameContainsKeywordsPredicate predicate = preparePredicate("El");
-        FindCommand command = new FindCommand(predicate);
-        expectedModel.updateFilteredPersonList(predicate);
+        FindPersonDescriptor fd = new FindPersonDescriptor();
+        fd.setName(processInput("El"));
+        FindCommand command = new FindCommand(fd);
+        expectedModel.updateFilteredPersonList(fd.getNamePredicate());
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
         assertEquals(Arrays.asList(DANIEL, ELLE), model.getFilteredPersonList());
     }
@@ -103,9 +109,10 @@ public class FindCommandTest {
     @Test
     public void execute_multipleSubstringKeywords_multiplePersonsFound() {
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 2);
-        NameContainsKeywordsPredicate predicate = preparePredicate("ur est");
-        FindCommand command = new FindCommand(predicate);
-        expectedModel.updateFilteredPersonList(predicate);
+        FindPersonDescriptor fd = new FindPersonDescriptor();
+        fd.setName(processInput("ur est"));
+        FindCommand command = new FindCommand(fd);
+        expectedModel.updateFilteredPersonList(fd.getNamePredicate());
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
         assertEquals(Arrays.asList(CARL, GEORGE), model.getFilteredPersonList());
     }
@@ -113,28 +120,36 @@ public class FindCommandTest {
     @Test
     public void execute_nameAndTagPredicate_personFound() {
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 1);
-        NameContainsKeywordsPredicate namePredicate = preparePredicate("Daniel");
-        TagsContainsTagPredicate tagPredicate = new TagsContainsTagPredicate(Set.of(new Tag("friends")));
-        FindCommand command = new FindCommand(namePredicate, tagPredicate);
-        expectedModel.updateFilteredPersonList(person -> namePredicate.test(person) && tagPredicate.test(person));
+        FindPersonDescriptor fd = new FindPersonDescriptor();
+        fd.setName(processInput("Daniel"));
+        fd.setTags(Set.of(new Tag("friends")));
+        FindCommand command = new FindCommand(fd);
+        expectedModel.updateFilteredPersonList(
+                person -> fd.getNamePredicate().test(person) && fd.getTagsPredicate().test(person));
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
         assertEquals(Collections.singletonList(DANIEL), model.getFilteredPersonList());
     }
 
     @Test
     public void equals_withTagPredicate() {
-        NameContainsKeywordsPredicate namePredicate = new NameContainsKeywordsPredicate(
-                Collections.singletonList("Alice"));
-        TagsContainsTagPredicate tagPredicate = new TagsContainsTagPredicate(Set.of(new Tag("colleague")));
+        Set<String> names = processInput("Alice");
+        Set<Tag> tags = Set.of(new Tag("colleague"));
 
-        FindCommand commandWithBoth = new FindCommand(namePredicate, tagPredicate);
-        FindCommand commandWithNameOnly = new FindCommand(namePredicate);
+        FindPersonDescriptor fdBoth = new FindPersonDescriptor();
+        fdBoth.setName(names);
+        fdBoth.setTags(tags);
+        FindCommand commandWithBoth = new FindCommand(fdBoth);
+
+
+        FindPersonDescriptor fdName = new FindPersonDescriptor();
+        fdBoth.setName(names);
+        FindCommand commandWithNameOnly = new FindCommand(fdName);
 
         // same object -> returns true
         assertTrue(commandWithBoth.equals(commandWithBoth));
 
         // same values -> returns true
-        FindCommand commandWithBothCopy = new FindCommand(namePredicate, tagPredicate);
+        FindCommand commandWithBothCopy = new FindCommand(fdBoth);
         assertTrue(commandWithBoth.equals(commandWithBothCopy));
 
         // different types -> returns false
@@ -149,16 +164,17 @@ public class FindCommandTest {
 
     @Test
     public void toStringMethod() {
-        NameContainsKeywordsPredicate predicate = new NameContainsKeywordsPredicate(Arrays.asList("keyword"));
-        FindCommand findCommand = new FindCommand(predicate);
-        String expected = FindCommand.class.getCanonicalName() + "{namePredicate=" + predicate + ", tagPredicate=null}";
+        FindPersonDescriptor fd = new FindPersonDescriptor();
+        fd.setName(processInput("keyword"));
+        FindCommand findCommand = new FindCommand(fd);
+        String expected = FindCommand.class.getCanonicalName() + "{findPersonDescriptor=" + fd + "}";
         assertEquals(expected, findCommand.toString());
     }
 
     /**
      * Parses {@code userInput} into a {@code NameContainsKeywordsPredicate}.
      */
-    private NameContainsKeywordsPredicate preparePredicate(String userInput) {
-        return new NameContainsKeywordsPredicate(Arrays.asList(userInput.split("\\s+")));
+    private Set<String> processInput(String userInput) {
+        return new HashSet<>(Arrays.asList(userInput.split("\\s+")));
     }
 }

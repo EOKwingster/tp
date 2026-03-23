@@ -12,6 +12,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.model.tag.Tag;
+import seedu.address.model.tag.TagFactoryTest;
+import seedu.address.model.tag.TagType;
 import seedu.address.model.tag.restricted.TagSchemaTest.TagSchemaStub;
 
 public class RestrictedTagTest {
@@ -156,5 +158,33 @@ public class RestrictedTagTest {
     public void tagParts_parseNoDelimiter_returnsEmpty() {
         Optional<RestrictedTag.TagParts> parsed = RestrictedTag.TagParts.parse("nodelimiter");
         assertFalse(parsed.isPresent());
+    }
+
+    @Test
+    public void getTagType_courseSchema_returnsCourse() {
+        var schema = new CourseTagSchema();
+        var tag = new RestrictedTag(schema, TagFactoryTest.VALID_COURSE_FULL_TAG);
+        assertEquals(TagType.COURSE, tag.getTagType());
+    }
+
+    @Test
+    public void getTagType_tutorialSchema_returnsTutorial() {
+        var schema = new TutorialTagSchema();
+        var tag = new RestrictedTag(schema, TagFactoryTest.VALID_TUTORIAL_FULL_TAG);
+        assertEquals(TagType.TUTORIAL, tag.getTagType());
+    }
+
+    @Test
+    public void getTagType_labSchema_returnsLab() {
+        var schema = new LabTagSchema();
+        var tag = new RestrictedTag(schema, TagFactoryTest.VALID_LAB_FULL_TAG);
+        assertEquals(TagType.LAB, tag.getTagType());
+    }
+
+    @Test
+    public void getTagType_unknownSchema_returnsTag() {
+        var schema = new TagSchemaStub("unknown");
+        var tag = new RestrictedTag(schema, "unknown:value");
+        assertEquals(TagType.TAG, tag.getTagType());
     }
 }

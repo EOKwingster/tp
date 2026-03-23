@@ -1,0 +1,32 @@
+@startuml
+!include ../style.puml
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+
+start
+:Get person at given index\nfrom filtered list;
+
+if (Is index valid?) then ([index out of bounds])
+    :Show error: invalid index;
+    stop
+else ([valid index])
+endif
+
+if (Is person TeachingStaff?) then ([person is not TeachingStaff])
+    :Show error: not teaching staff;
+    stop
+else ([person is TeachingStaff])
+endif
+
+if (Does slot already exist?) then ([time slot already exists])
+    :Show error: duplicate slot;
+    stop
+else ([slot is new])
+endif
+
+:Create updated TeachingStaff\nwith new slot added;
+:Replace old person in model;
+:Show success message;
+
+stop
+@enduml
