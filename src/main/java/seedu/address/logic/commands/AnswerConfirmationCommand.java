@@ -24,30 +24,24 @@ public class AnswerConfirmationCommand extends Command {
     public static final String MESSAGE_NO_PENDING_COMMAND = "No pending command to answer for.";
 
     private final AnswerType answerType;
-    private final Command pendingCommand;
-
-    public AnswerConfirmationCommand(AnswerType answerType) {
-        this(answerType, null);
-    }
 
     /**
      * @param answerType The type of answer provided by the user.
-     * @param pendingCommand The pending command to be executed is confirmed
      */
-    public AnswerConfirmationCommand(AnswerType answerType, Command pendingCommand) {
+    public AnswerConfirmationCommand(AnswerType answerType) {
         Objects.requireNonNull(answerType);
         this.answerType = answerType;
-        this.pendingCommand = pendingCommand;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
-        if (pendingCommand == null) {
+        if (model.getPendingCommand() == null) {
             throw new CommandException(MESSAGE_NO_PENDING_COMMAND);
         }
+
         switch (answerType) {
         case YES -> {
-            return pendingCommand.execute(model);
+            return model.getPendingCommand().execute(model);
         }
         case NO -> {
             return new CommandResult(MESSAGE_COMMAND_CANCELLED);
@@ -61,10 +55,6 @@ public class AnswerConfirmationCommand extends Command {
         }
     }
 
-    public AnswerType getAnswerType() {
-        return answerType;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -73,8 +63,7 @@ public class AnswerConfirmationCommand extends Command {
         if (!(obj instanceof AnswerConfirmationCommand other)) {
             return false;
         }
-        return this.answerType == other.answerType
-                && Objects.equals(this.pendingCommand, other.pendingCommand);
+        return this.answerType == other.answerType;
     }
 
     /**

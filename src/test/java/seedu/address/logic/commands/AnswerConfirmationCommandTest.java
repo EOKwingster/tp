@@ -39,8 +39,9 @@ public class AnswerConfirmationCommandTest {
 
     @Test
     public void execute_noAnswer_returnsCancelledMessage() {
+        model.setPendingCommand(new ClearCommand());
         AnswerConfirmationCommand command = new AnswerConfirmationCommand(
-                AnswerConfirmationCommand.AnswerType.NO, new ClearCommand());
+                AnswerConfirmationCommand.AnswerType.NO);
         Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
 
         assertCommandSuccess(command, model, AnswerConfirmationCommand.MESSAGE_COMMAND_CANCELLED, expectedModel);
@@ -48,8 +49,9 @@ public class AnswerConfirmationCommandTest {
 
     @Test
     public void execute_noAnswer_modelUnchanged() {
+        model.setPendingCommand(new ClearCommand());
         AnswerConfirmationCommand command = new AnswerConfirmationCommand(
-                AnswerConfirmationCommand.AnswerType.NO, new ClearCommand());
+                AnswerConfirmationCommand.AnswerType.NO);
         Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
 
         assertCommandSuccess(command, model, AnswerConfirmationCommand.MESSAGE_COMMAND_CANCELLED, expectedModel);
@@ -58,8 +60,9 @@ public class AnswerConfirmationCommandTest {
 
     @Test
     public void execute_yesAnswer_clearsModel() {
+        model.setPendingCommand(new ClearCommand());
         AnswerConfirmationCommand command = new AnswerConfirmationCommand(
-                AnswerConfirmationCommand.AnswerType.YES, new ClearCommand());
+                AnswerConfirmationCommand.AnswerType.YES);
 
         Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         expectedModel.setAddressBook(new AddressBook());
@@ -70,8 +73,9 @@ public class AnswerConfirmationCommandTest {
     @Test
     public void execute_yesAnswer_deletesPerson() {
         Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        model.setPendingCommand(new DeleteCommand(INDEX_FIRST_PERSON));
         AnswerConfirmationCommand command = new AnswerConfirmationCommand(
-                AnswerConfirmationCommand.AnswerType.YES, new DeleteCommand(INDEX_FIRST_PERSON));
+                AnswerConfirmationCommand.AnswerType.YES);
 
         Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         expectedModel.deletePerson(personToDelete);
@@ -83,74 +87,35 @@ public class AnswerConfirmationCommandTest {
     }
 
     @Test
-    public void getAnswerType_yesAnswer_returnsYes() {
-        AnswerConfirmationCommand command =
-                new AnswerConfirmationCommand(AnswerConfirmationCommand.AnswerType.YES);
-        assertEquals(AnswerConfirmationCommand.AnswerType.YES, command.getAnswerType());
-    }
-
-    @Test
-    public void getAnswerType_noAnswer_returnsNo() {
-        AnswerConfirmationCommand command =
-                new AnswerConfirmationCommand(AnswerConfirmationCommand.AnswerType.NO);
-        assertEquals(AnswerConfirmationCommand.AnswerType.NO, command.getAnswerType());
-    }
-
-    @Test
     public void equals_sameObject_returnsTrue() {
+        model.setPendingCommand(new ClearCommand());
         AnswerConfirmationCommand command = new AnswerConfirmationCommand(
-                AnswerConfirmationCommand.AnswerType.YES, new ClearCommand());
+                AnswerConfirmationCommand.AnswerType.YES);
         assertTrue(command.equals(command));
     }
 
     @Test
-    public void equals_sameAnswerTypeAndPendingCommand_returnsTrue() {
-        ClearCommand clearCommand = new ClearCommand();
+    public void equals_sameAnswerType_returnsTrue() {
         AnswerConfirmationCommand command1 = new AnswerConfirmationCommand(
-                AnswerConfirmationCommand.AnswerType.NO, clearCommand);
+                AnswerConfirmationCommand.AnswerType.NO);
         AnswerConfirmationCommand command2 = new AnswerConfirmationCommand(
-                AnswerConfirmationCommand.AnswerType.NO, clearCommand);
+                AnswerConfirmationCommand.AnswerType.NO);
         assertTrue(command1.equals(command2));
     }
 
     @Test
     public void equals_differentAnswerType_returnsFalse() {
         AnswerConfirmationCommand yesCommand = new AnswerConfirmationCommand(
-                AnswerConfirmationCommand.AnswerType.YES, new ClearCommand());
+                AnswerConfirmationCommand.AnswerType.YES);
         AnswerConfirmationCommand noCommand = new AnswerConfirmationCommand(
-                AnswerConfirmationCommand.AnswerType.NO, new ClearCommand());
-        assertFalse(yesCommand.equals(noCommand));
-    }
-
-    @Test
-    public void equals_differentPendingCommand_returnsFalse() {
-        AnswerConfirmationCommand command1 = new AnswerConfirmationCommand(
-                AnswerConfirmationCommand.AnswerType.YES, new ClearCommand());
-        AnswerConfirmationCommand command2 = new AnswerConfirmationCommand(
-                AnswerConfirmationCommand.AnswerType.YES, new DeleteCommand(INDEX_FIRST_PERSON));
-        assertFalse(command1.equals(command2));
-    }
-
-    @Test
-    public void equals_nullPendingCommandVsNonNull_returnsFalse() {
-        AnswerConfirmationCommand withPending = new AnswerConfirmationCommand(
-                AnswerConfirmationCommand.AnswerType.NO, new ClearCommand());
-        AnswerConfirmationCommand withoutPending = new AnswerConfirmationCommand(
                 AnswerConfirmationCommand.AnswerType.NO);
-        assertFalse(withPending.equals(withoutPending));
-    }
-
-    @Test
-    public void equals_null_returnsFalse() {
-        AnswerConfirmationCommand command = new AnswerConfirmationCommand(
-                AnswerConfirmationCommand.AnswerType.NO, new ClearCommand());
-        assertFalse(command.equals(null));
+        assertFalse(yesCommand.equals(noCommand));
     }
 
     @Test
     public void equals_differentType_returnsFalse() {
         AnswerConfirmationCommand command = new AnswerConfirmationCommand(
-                AnswerConfirmationCommand.AnswerType.NO, new ClearCommand());
+                AnswerConfirmationCommand.AnswerType.NO);
         assertFalse(command.equals("N"));
     }
 }

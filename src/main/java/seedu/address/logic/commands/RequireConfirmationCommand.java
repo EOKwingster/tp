@@ -29,6 +29,7 @@ public class RequireConfirmationCommand extends Command {
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
+        model.setPendingCommand(pendingCommand);
         return new CommandResult(String.format(
                 MESSAGE_REQUIRE_CONFIRMATION,
                 userInput,
@@ -37,6 +38,9 @@ public class RequireConfirmationCommand extends Command {
         ));
     }
 
+    /**
+     * For tests only
+     */
     public Command getPendingCommand() {
         return pendingCommand;
     }
