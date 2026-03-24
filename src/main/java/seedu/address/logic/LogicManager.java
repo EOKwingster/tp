@@ -56,19 +56,11 @@ public class LogicManager implements Logic {
         if (command instanceof RequireConfirmationCommand requireConfirmationCommand) {
             this.pendingCommand = requireConfirmationCommand.getCommand();
         } else if (command instanceof AnswerConfirmationCommand answerConfirmationCommand) {
-            if (pendingCommand == null) {
-                throw new CommandException("No pending command to answer for.");
-            }
-            switch (answerConfirmationCommand.getAnswerType()) {
-                case YES -> command = pendingCommand;
-                case NO -> pendingCommand = null;
-                default -> throw new CommandException(String.format(
-                        AnswerConfirmationCommand.MESSAGE_UNKNOWN_ANSWER,
-                        answerConfirmationCommand.getAnswerType(),
-                        AnswerConfirmationCommand.COMMAND_WORD_YES,
-                        AnswerConfirmationCommand.COMMAND_WORD_NO)
-                );
-            }
+            command = new AnswerConfirmationCommand(
+                    answerConfirmationCommand.getAnswerType(),
+                    this.pendingCommand
+            );
+            this.pendingCommand = null;
         } else {
             this.pendingCommand = null;
         }
