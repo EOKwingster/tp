@@ -66,7 +66,6 @@ public class AddTagCommandTest {
         String expectedMessage = String.format(AddTagCommand.MESSAGE_ADD_SUCCESS, Messages.format(editedPerson));
 
         ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
-        showPersonAtIndex(expectedModel, INDEX_SECOND_PERSON);
         expectedModel.setPerson(personToEdit, editedPerson);
 
         assertCommandSuccess(addTagCommand, model, expectedMessage, expectedModel);

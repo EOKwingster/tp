@@ -2,6 +2,7 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.HashSet;
 import java.util.List;
@@ -72,6 +73,7 @@ public class AddTagCommand extends Command {
         var outMessage = String.format(MESSAGE_ADD_SUCCESS, Messages.format(editedPerson))
                 + formatDuplicateTagMessage(duplicatedTags);
 
+        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         return new CommandResult(outMessage);
     }
 
