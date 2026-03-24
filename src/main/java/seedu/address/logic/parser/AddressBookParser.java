@@ -3,7 +3,6 @@ package seedu.address.logic.parser;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 
-import java.util.Set;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +13,7 @@ import seedu.address.logic.commands.AddTagCommand;
 import seedu.address.logic.commands.AnswerConfirmationCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.Command;
+import seedu.address.logic.commands.CriticalCommand;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.ExitCommand;
@@ -38,10 +38,6 @@ public class AddressBookParser {
      */
     private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<commandWord>\\S+)(?<arguments>.*)");
     private static final Logger logger = LogsCenter.getLogger(AddressBookParser.class);
-    private static final Set<String> COMMAND_WORDS_REQUIRES_CONFIRMATION = Set.of(
-            ClearCommand.COMMAND_WORD,
-            DeleteCommand.COMMAND_WORD
-    );
 
     /**
      * Parses user input into command for execution.
@@ -66,7 +62,7 @@ public class AddressBookParser {
 
         Command command = parseCommandWord(commandWord, arguments, userInput);
 
-        if (COMMAND_WORDS_REQUIRES_CONFIRMATION.contains(commandWord)) {
+        if (command instanceof CriticalCommand) {
             return new RequireConfirmationCommand(userInput, command);
         } else {
             return command;
