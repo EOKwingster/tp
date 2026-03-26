@@ -20,6 +20,7 @@ import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.ExportCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.HelpCommand;
+import seedu.address.logic.commands.ImportCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.RequireConfirmationCommand;
 import seedu.address.logic.commands.StaffListCommand;
@@ -73,8 +74,8 @@ public class AddressBookParser {
      * Parses command word and arguments into command for execution.
      *
      * @param commandWord the command word extracted from user input
-     * @param arguments the arguments extracted from user input
-     * @param userInput full user input string
+     * @param arguments   the arguments extracted from user input
+     * @param userInput   full user input string
      * @return the command parsed from the command word and arguments
      * @throws ParseException if the command word is unknown
      */
@@ -120,11 +121,14 @@ public class AddressBookParser {
         case TutorSlotCommand.COMMAND_WORD:
             return new TutorSlotCommandParser().parse(arguments);
 
+        case TutorDashboardCommand.COMMAND_WORD:
+            return new TutorDashboardCommand();
+
         case ExportCommand.COMMAND_WORD:
             return new ExportCommandParser().parse(arguments);
 
-        case TutorDashboardCommand.COMMAND_WORD:
-            return new TutorDashboardCommand();
+        case ImportCommand.COMMAND_WORD:
+            return new ImportCommandParser().parse(arguments);
 
         case AnswerConfirmationCommand.COMMAND_WORD_YES:
             return new AnswerConfirmationCommand(AnswerConfirmationCommand.AnswerType.YES);
