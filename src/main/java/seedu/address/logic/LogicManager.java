@@ -51,6 +51,10 @@ public class LogicManager implements Logic {
 
         commandResult = command.execute(model);
 
+        if (!commandResult.isPending()) {
+            model.setPendingCommand(null);
+        }
+
         try {
             storage.saveAddressBook(model.getAddressBook());
         } catch (AccessDeniedException e) {
@@ -85,10 +89,5 @@ public class LogicManager implements Logic {
     @Override
     public void setGuiSettings(GuiSettings guiSettings) {
         model.setGuiSettings(guiSettings);
-    }
-
-    @Override
-    public void clearPendingCommand() {
-        model.setPendingCommand(null);
     }
 }
