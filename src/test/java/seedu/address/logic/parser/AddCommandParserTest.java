@@ -48,7 +48,6 @@ import seedu.address.model.person.Phone;
 import seedu.address.model.person.Position;
 import seedu.address.model.person.Username;
 import seedu.address.model.tag.Tag;
-import seedu.address.model.util.SampleDataUtil;
 import seedu.address.testutil.PersonBuilder;
 
 public class AddCommandParserTest {
