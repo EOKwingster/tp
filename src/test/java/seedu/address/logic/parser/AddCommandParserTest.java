@@ -46,7 +46,6 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.Position;
-import seedu.address.model.person.TeachingStaff;
 import seedu.address.model.person.Username;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.util.SampleDataUtil;
@@ -97,16 +96,22 @@ public class AddCommandParserTest {
     // ===================== Staff (tutor) edge cases =====================
 
     @Test
-    public void parse_staffNameOnly_success() {
-        // Staff with only name - defaults for phone, email, username, position
-        Person expectedStaff = new TeachingStaff(new Name("Jane Smith"));
-        assertParseSuccess(parser, "staff n/Jane Smith", new AddCommand(expectedStaff));
+    public void parse_staffRequiredFieldsWithoutPosition_success() {
+        Person expectedStaff = new PersonBuilder()
+                .withName(VALID_NAME_BOB)
+                .withPhone(VALID_PHONE_BOB)
+                .withEmail(VALID_EMAIL_BOB)
+                .withUsername(VALID_USERNAME_BOB)
+                .withPosition(Position.TEACHING_ASSISTANT)
+                .build();
+        assertParseSuccess(parser, "staff" + NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + USERNAME_DESC_BOB,
+                new AddCommand(expectedStaff));
     }
 
     @Test
-    public void parse_staffNameOnlyWithTags_success() {
-        Person expectedStaff = new TeachingStaff(new Name("John Tutor"), SampleDataUtil.getTagSet("colleagues"));
-        assertParseSuccess(parser, "staff n/John Tutor t/colleagues", new AddCommand(expectedStaff));
+    public void parse_staffNameOnly_failure() {
+        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_STAFF_USAGE);
+        assertParseFailure(parser, "staff n/Jane Smith", expectedMessage);
     }
 
     @Test
@@ -118,14 +123,16 @@ public class AddCommandParserTest {
     }
 
     @Test
-    public void parse_staffPartialOptionalFields_failure() {
-        // When any optional field (p/e/u/pos) is given, all four must be given
+    public void parse_staffMissingRequiredFields_failure() {
+        // name, phone, email, username are required for staff
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_STAFF_USAGE);
         // Only phone
         assertParseFailure(parser, "staff n/Bob" + PHONE_DESC_BOB, expectedMessage);
         // Phone and email but no username/position
         assertParseFailure(parser, "staff n/Bob" + PHONE_DESC_BOB + EMAIL_DESC_BOB, expectedMessage);
-        // Position only
+        // Missing phone only
+        assertParseFailure(parser, "staff n/Bob" + EMAIL_DESC_BOB + USERNAME_DESC_BOB, expectedMessage);
+        // Position only (also missing required p/e/u)
         assertParseFailure(parser, "staff n/Bob" + POSITION_DESC_BOB, expectedMessage);
     }
 
@@ -138,7 +145,8 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_staffInvalidName_failure() {
-        assertParseFailure(parser, "staff n/James&", Name.MESSAGE_CONSTRAINTS);
+        assertParseFailure(parser, "staff n/James&" + PHONE_DESC_BOB + EMAIL_DESC_BOB + USERNAME_DESC_BOB,
+                Name.MESSAGE_CONSTRAINTS);
     }
 
     @Test
@@ -256,16 +264,6 @@ public class AddCommandParserTest {
         // all prefixes missing
         assertParseFailure(parser, VALID_NAME_BOB + VALID_PHONE_BOB + VALID_EMAIL_BOB
                 + VALID_USERNAME_BOB,
-                expectedMessage);
-    }
-
-    @Test
-    public void parse_staffCompulsoryFieldMissing_failure() {
-        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_STAFF_USAGE);
-
-        // missing position prefix for staff
-        assertParseFailure(parser, "staff" + NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
-                + USERNAME_DESC_BOB,
                 expectedMessage);
     }
 

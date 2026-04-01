@@ -35,6 +35,7 @@ import seedu.address.logic.commands.RequireConfirmationCommand;
 import seedu.address.logic.commands.StaffListCommand;
 import seedu.address.logic.commands.StudentListCommand;
 import seedu.address.logic.commands.TutorSlotCommand;
+import seedu.address.logic.commands.TutorDashboardCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.TimeSlot;
@@ -139,6 +140,13 @@ public class AddressBookParserTest {
         TimeSlot slot = new TimeSlot("mon-10-12");
         TutorSlotCommand expected = new TutorSlotCommand(Index.fromOneBased(1), slot);
         assertEquals(expected, parser.parseCommand(TutorSlotCommand.COMMAND_WORD + " 1 mon-10-12"));
+    }
+
+    @Test
+    public void parseCommand_tutordashboard() throws Exception {
+        assertTrue(parser.parseCommand(TutorDashboardCommand.COMMAND_WORD) instanceof TutorDashboardCommand);
+        assertTrue(parser.parseCommand(TutorDashboardCommand.COMMAND_WORD + " foo")
+                instanceof TutorDashboardCommand);
     }
 
     @Test
