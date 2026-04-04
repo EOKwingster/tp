@@ -1,7 +1,10 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.*;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_USERNAME;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +37,7 @@ public class FindCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds all persons who meets the following conditions:"
             + "\n 1. name contains any of the specified keywords.\n"
             + " 2. username contains any of the specified username keywords. Each defined with " + PREFIX_USERNAME
-            + " 3. phone contains any of the specified sequence. Each defined with " + PREFIX_PHONE+ ".\n"
+            + " 3. phone contains any of the specified sequence. Each defined with " + PREFIX_PHONE + ".\n"
             + " 4. person who have the exact tags. Each defined with " + PREFIX_TAG + ".\n"
             + "Parameters: "
             + "[KEYWORD [MORE_KEYWORDS]...] "
