@@ -30,7 +30,9 @@ public class RequireConfirmationCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         assert pendingCommand instanceof CriticalCommand;
-        ((CriticalCommand) pendingCommand).preExecuteVerify(model);
+        CriticalCommand criticalCommand = (CriticalCommand) pendingCommand;
+        criticalCommand.preExecuteVerify(model);
+
         model.setPendingCommand(pendingCommand);
         return new CommandResult(String.format(
                 MESSAGE_REQUIRE_CONFIRMATION,
