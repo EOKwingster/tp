@@ -399,7 +399,7 @@ Some commands that are **irreversible** — currently `delete` and `clear` — r
 
 * Typing `Y` executes the original command.
 * Typing `N` cancels the command and displays `Command Cancelled!`.
-* Entering any other command while a confirmation is pending will execute that command instead and **discard** the pending one.
+* Entering any input while a command is pending (i.e. waiting for conformation) will **discard** the pending command.
 
 ---
 
