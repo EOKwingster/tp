@@ -104,10 +104,6 @@ public class PersonDeserialiser {
             String errMsg = String.format("%s error: 'Name' field has no content within \"\"", personCsvRep);
             throw new DeserialisePersonException(errMsg);
         }
-        if (subStrStream.isExhausted()) {
-            String errMsg = String.format("%s error: 'Name' field is missing ending \"", personCsvRep);
-            throw new DeserialisePersonException(errMsg);
-        }
         try {
             return new Name(nameStrRep);
         } catch (Exception e) {
