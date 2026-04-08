@@ -140,13 +140,15 @@ public class FindCommand extends Command {
         }
 
         private boolean validate(String s, String regex, String message) {
-            checkArgument(s.matches(regex), message);
-            return true;
+            if (!s.isEmpty()) {
+                checkArgument(s.matches(regex), message);
+            }
+            return !s.isEmpty();
         }
 
         private Set<String> cleanArgs(Set<String> raw, String regex, String message) {
             return raw.stream()
-                    .filter(x -> !x.isEmpty() && validate(x, regex, message))
+                    .filter(x -> validate(x, regex, message))
                     .collect(Collectors.toSet());
         }
 
