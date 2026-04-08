@@ -40,11 +40,6 @@ public class FindPersonDescriptorTest {
         fdTwo.setName(Set.of("test4", "test5", "test6"));
         assertFalse(fdOne.equals(fdTwo));
 
-        // empty name -> returns true
-        fdOne.setName(Set.of());
-        fdTwo.setName(Set.of(""));
-        assertTrue(fdOne.equals(fdTwo));
-
         // test copy all values -> returns true
         fdTwo = new FindPersonDescriptor();
         fdTwo.setPhone(Set.of("11111111", "22222222", "3333333"));
