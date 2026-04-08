@@ -28,6 +28,10 @@ public class FindPersonDescriptorTest {
         // different types -> returns false
         assertFalse(fdOne.equals(5));
 
+        // test copy -> returns true
+        fdOne = new FindPersonDescriptor(fdTwo);
+        assertTrue(fdOne.equals(fdTwo));
+
         // different values -> returns false
         fdOne.setName(Set.of("test1", "test2", "test3"));
         assertFalse(fdOne.equals(fdTwo));
@@ -36,9 +40,6 @@ public class FindPersonDescriptorTest {
         fdTwo.setName(Set.of("test4", "test5", "test6"));
         assertFalse(fdOne.equals(fdTwo));
 
-        // test copy -> returns true
-        fdOne = new FindPersonDescriptor(fdTwo);
-        assertTrue(fdOne.equals(fdOne));
 
         // test copy all values -> returns true
         fdTwo = new FindPersonDescriptor();
