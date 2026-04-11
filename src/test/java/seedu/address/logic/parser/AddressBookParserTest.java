@@ -108,7 +108,8 @@ public class AddressBookParserTest {
         fd.setName(new HashSet<>(keywords));
         assertEquals(new FindCommand(fd), command);
 
-        assertThrows(ParseException.class, Name.MESSAGE_FIND_NAME_VALIDATE_ERROR, () ->
+        assertThrows(ParseException.class, String.format("%s%n%s", "Name keyword violates constraints.",
+                        Name.MESSAGE_FIND_NAME_VALIDATE_ERROR), () ->
                 parser.parseCommand(FindCommand.COMMAND_WORD + " n/@@@"));
         assertThrows(ParseException.class, Email.MESSAGE_FIND_EMAIL_VALIDATE_ERROR, () ->
                 parser.parseCommand(FindCommand.COMMAND_WORD + " e/,"));
