@@ -28,8 +28,8 @@ public class FindCommandParser implements Parser<FindCommand> {
      * @throws ParseException if the user input does not conform the expected format
      */
     public FindCommand parse(String args) throws ParseException {
-        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_EMAIL, PREFIX_PHONE,
-                PREFIX_USERNAME, PREFIX_TAG);
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_EMAIL, PREFIX_PHONE, PREFIX_USERNAME,
+                PREFIX_TAG, PREFIX_NAME);
 
         if (argMultimap.getAllValues(PREFIX_NAME).isEmpty()
                 && argMultimap.getAllValues(PREFIX_EMAIL).isEmpty()
