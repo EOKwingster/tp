@@ -512,7 +512,7 @@ Some commands that are **irreversible** — currently `delete` and `clear` — r
 * Typing `Y` executes the original command.
 * Typing `N` cancels the command and displays `Command Cancelled!`.
 * Submitting any input while a command is pending (i.e. waiting for confirmation) will **discard** the pending command.
-* `Y` must be exact match to confirm
+* `Y` and `N` must be exact match to confirm, both `Y` and `N` are case-sensitive.
 
 ---
 
