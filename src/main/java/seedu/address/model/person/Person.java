@@ -86,7 +86,7 @@ public sealed class Person permits TeachingStaff {
             return false;
         }
         Person other = (Person) otherPerson;
-        if (!name.equals(other.name) || !phone.equals(other.phone) || !email.equals(other.email)
+        if (!phone.equals(other.phone) || !email.equals(other.email)
                 || !username.equals(other.username)) {
             return false;
         }
