@@ -152,7 +152,12 @@ Adds a student to the address book.
     * Constraints for names:
         * Use only letters, numbers, and symbols: `/`, `,`, `-`, `'`, `(`, `)` and `.`
         * Cannot be empty or only whitespace.
-        * Use only a single space or hyphen between words.
+        * Between words, use either:
+          * a single space ` `,
+          * hyphen `-`, 
+          * forward slash `/`, 
+          * comma and space `, `, 
+          * period and space `. `,
         * Must start with an alphanumeric character.
         * Must end with either alphanumeric character, closing bracket `)` or period `.`.
         * Parentheses must be at the end, properly ordered, i.e, open bracket `(` must always be followed with close bracket `)`, and non-empty.
@@ -164,6 +169,7 @@ Adds a student to the address book.
         * Soh La Min (Su La Min)
         * Child S/O Father
         * Donald Trump Sr.
+        * J. R. R. Tolkien
 * `PHONE`: Valid Singapore phone number. Exactly **8 digits in one contiguous block** (no spaces or other characters),
   must start with `3`, `6`, `8`, or `9`. Must be unique.
 * `EMAIL`: Valid email format. Must be unique (see [Duplicate contacts](#duplicate-contacts)).
@@ -188,12 +194,18 @@ Adds a teaching staff (tutor) to the address book.
 **Parameters:**
 
 * `NAME`: Required.
-  * Use only letters, numbers, and symbols: `/`, `,`, `-`, `'`, `(`, `)` and `.`
-  * Cannot be empty or only whitespace.
-  * Use only a single space or hyphen between words.
-  * Must start with an alphanumeric character.
-  * Must end with either alphanumeric character, closing bracket `)` or period `.`.
-  * Parentheses must be at the end, properly ordered, i.e, open bracket `(` must always be followed with close bracket `)`, and non-empty.
+    * Constraints for names:
+        * Use only letters, numbers, and symbols: `/`, `,`, `-`, `'`, `(`, `)` and `.`
+        * Cannot be empty or only whitespace.
+        * Between words, use either:
+            * a single space ` `,
+            * hyphen `-`,
+            * forward slash `/`,
+            * comma and space `, `,
+            * period and space `. `,
+        * Must start with an alphanumeric character.
+        * Must end with either alphanumeric character, closing bracket `)` or period `.`.
+        * Parentheses must be at the end, properly ordered, i.e, open bracket `(` must always be followed with close bracket `)`, and non-empty.
     * Valid Examples:
         * John Doe
         * David, Tan Ah Khow
@@ -202,6 +214,7 @@ Adds a teaching staff (tutor) to the address book.
         * Soh La Min (Su La Min)
         * Child S/O Father
         * Donald Trump Sr.
+        * J. R. R. Tolkien
 * `p/`, `e/`, `u/`: Required.
 * `pos/`: Optional.
 * `PHONE`: Valid Singapore phone number. Exactly **8 digits in one contiguous block** (no spaces or other characters),

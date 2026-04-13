@@ -68,7 +68,18 @@ public class NameTest {
         assertFalse(Name.isValidName("'James"));
         assertFalse(Name.isValidName("(James"));
         assertFalse(Name.isValidName(")James"));
+
+        assertFalse(Name.isValidName("James/"));
+        assertFalse(Name.isValidName("James,"));
+        assertFalse(Name.isValidName("James-"));
+        assertFalse(Name.isValidName("James'"));
+        assertFalse(Name.isValidName("James)"));
+
         assertFalse(Name.isValidName(".James"));
+        assertFalse(Name.isValidName("J,James"));
+        assertFalse(Name.isValidName("J(James"));
+        assertFalse(Name.isValidName("J)James"));
+        assertFalse(Name.isValidName("J.James"));
 
         // valid name
         assertTrue(Name.isValidName("peter jack")); // alphabets only with single space
