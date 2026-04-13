@@ -370,7 +370,7 @@ Appends tags to an existing person, without having to respecify all existing tag
 Finds persons whose names contain any of the given keywords and/or who have any of the specified tags.
 
 **Format:**
-`find [n/NAME [MORE_NAMES]...] [e/EMAIL [MORE_EMAIL]...] [u/USERNAME [MORE_USERNAMES]...] [p/PHONE [MORE_PHONES]...] [t/TAG [MORE_TAGS]...]`
+`find [n/NAME]… [e/EMAIL]… [u/USERNAME]… [p/PHONE]… [t/TAG]…`
 
 **Note:** At least one of NAME, EMAIL, USERNAME, PHONE or TAG must be provided.
 
@@ -589,7 +589,7 @@ the data from your previous Doritus home folder.
 | **Tutor slot**         | `tutorslot INDEX SLOT` <br> e.g., `tutorslot 1 mon-10-12`                                                                                                                                                                        |
 | **Tutor dashboard**    | `tutordashboard`                                                                                                                                                                                                                 |
 | **Edit**               | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [u/USERNAME] [pos/POSITION] [t/TAG]…​` <br> e.g., `edit 2 n/James Lee e/jameslee@example.com` or `edit 1 pos/Professors` (staff only)                                                   |
-| **Find**               | `find [n/NAME [MORE_NAMES]...] [e/EMAIL [MORE_EMAIL]...] [u/USERNAME [MORE_USERNAMES]...] [p/PHONE [MORE_PHONES]...] [t/TAG [MORE_TAGS]...]` <br> e.g., `find n/James Jake t/friends e/james u/jake p/123`                       |
+| **Find**               | `find [n/NAME]… [e/EMAIL]… [u/USERNAME]… [p/PHONE]… [t/TAG]…` <br> e.g., `find n/James Jake t/friends e/james u/jake u/james p/123`                                                                                              |
 | **Delete**             | `delete INDEX` <br> e.g., `delete 3` (index from current list: full, staff, or students)                                                                                                                                         |
 | **Clear**              | `clear`                                                                                                                                                                                                                          |
 | **Import**             | `import f/FILE` <br> e.g., `import f/./contacts.csv`                                                                                                                                                                             |
