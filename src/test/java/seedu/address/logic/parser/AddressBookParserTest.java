@@ -101,15 +101,16 @@ public class AddressBookParserTest {
 
     @Test
     public void parseCommand_find() throws Exception {
-        List<String> keywords = Arrays.asList("foo", "bar", "baz");
+        List<String> keywords = Arrays.asList("foo bar baz");
         FindCommand command = (FindCommand) parser.parseCommand(
-                FindCommand.COMMAND_WORD + " " + keywords.stream().collect(Collectors.joining(" ")));
+                FindCommand.COMMAND_WORD + " n/" + keywords.stream().collect(Collectors.joining(" ")));
         FindPersonDescriptor fd = new FindPersonDescriptor();
         fd.setName(new HashSet<>(keywords));
         assertEquals(new FindCommand(fd), command);
 
-        assertThrows(ParseException.class, Name.MESSAGE_FIND_NAME_VALIDATE_ERROR, () ->
-                parser.parseCommand(FindCommand.COMMAND_WORD + " @@@"));
+        assertThrows(ParseException.class, String.format("%s%n%s", "Name keyword violates constraints.",
+                        Name.MESSAGE_FIND_NAME_VALIDATE_ERROR), () ->
+                parser.parseCommand(FindCommand.COMMAND_WORD + " n/@@@"));
         assertThrows(ParseException.class, Email.MESSAGE_FIND_EMAIL_VALIDATE_ERROR, () ->
                 parser.parseCommand(FindCommand.COMMAND_WORD + " e/,"));
         assertThrows(ParseException.class, Phone.MESSAGE_FIND_PHONE_VALIDATE_ERROR, () ->
