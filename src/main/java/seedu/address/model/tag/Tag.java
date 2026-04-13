@@ -10,7 +10,7 @@ import java.util.Objects;
  * Guarantees: immutable; name is valid as declared in {@link #isValidTagName(String)}
  */
 public class Tag extends AbstractTag {
-    public static final String MESSAGE_CONSTRAINTS = "Tags names should be alphanumeric";
+    public static final String MESSAGE_CONSTRAINTS = "Tag names should be alphanumeric and non-empty";
     public static final String VALIDATION_REGEX = "\\p{Alnum}+";
 
     /**

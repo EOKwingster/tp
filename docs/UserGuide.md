@@ -109,6 +109,7 @@ fast, Doritus can get your contact management tasks done faster than traditional
 
 ### Types of tags
 
+**Note:** Tags must be **non-empty**
 - General purpose tags: Alphanumeric characters only (e.g. `examDuty`)
     - Case-insensitive (e.g. `examDuty` and `examduty` are treated as equivalent tags)
 - Special tags: these tags follow a specific format:
@@ -343,7 +344,7 @@ Edits an existing person in the address book. For teaching staff, you can also c
 
 Appends tags to an existing person, without having to respecify all existing tags
 
-**Format:** `tag-add INDEX [t/TAG]…`
+**Format:** `tag-add INDEX t/TAG [t/TAG]…`
 
 **Parameters:**
 
@@ -585,6 +586,7 @@ the data from your previous Doritus home folder.
 | **Tutor slot**         | `tutorslot INDEX SLOT` <br> e.g., `tutorslot 1 mon-10-12`                                                                                                                                                                        |
 | **Tutor dashboard**    | `tutordashboard`                                                                                                                                                                                                                 |
 | **Edit**               | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [u/USERNAME] [pos/POSITION] [t/TAG]…​` <br> e.g., `edit 2 n/James Lee e/jameslee@example.com` or `edit 1 pos/Professors` (staff only)                                                   |
+| **Add tags**  | `tag-add INDEX t/TAG [t/TAG]…` <br> e.g. `tag-add 1 t/needsHelp t/course:CS2103T t/tut:10` |
 | **Find**               | `find [KEYWORD [MORE_KEYWORDS]...] [t/TAG [MORE_TAGS]...] [e/EMAIL [MORE_EMAILS]...] [u/USERNAME [USERNAMES]...] [p/PHONE_SEQUENCE [PHONE_SEQUENCES]...]` <br> e.g., `find James Jake t/friends e/james u/jake p/123`            |
 | **Delete**             | `delete INDEX` <br> e.g., `delete 3` (index from current list: full, staff, or students)                                                                                                                                         |
 | **Clear**              | `clear`                                                                                                                                                                                                                          |
