@@ -380,6 +380,8 @@ Finds persons whose names contain any of the given keywords and/or who have any 
     * The order of keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
     * Keywords is matched using substring e.g. `Han` will match `Hans`
     * Persons matching at least one keyword will be returned (i.e. `OR` search)
+    * All name keywords must comply with name constraints. For instance, the keyword must only start and end with alphanumeric character
+    * Refer to [`add`](#adding-a-student-add) command for constraints on names
 
 * **Tag search:** Tags match against person tags (case-insensitive)
     * Persons with at least one matching tag will be returned (i.e. `OR` search)
@@ -394,15 +396,17 @@ Finds persons whose names contain any of the given keywords and/or who have any 
 * **Username search:** Keywords match against person username (case-insensitive)
     * Persons matching at least one keyword will be returned (i.e. `OR` search)
     * Keywords is matched using substring e.g. `ice` will match `alice`
+    * Refer to [`add`](#adding-a-student-add) command for constraints on usernames
 
 * **Phone Sequence search:** Each `p/` value is a **digit-only** sequence used to search within stored phone numbers.
-    * Each sequence must be **1 to 8 digits** (no spaces or other characters). Values with more than 8 digits are not
-      accepted.
+    * Each sequence must be **1 to 8 digits** (no spaces or other characters). Values with more than 8 digits are not accepted
     * Matching is by **substring** on the person’s phone: e.g. `456` matches `91234567`.
     * Persons whose phone matches at least one given sequence are returned (i.e. `OR` search across `p/` values).
 
-* **Combined search:** If both keywords and tags are provided, persons must match at least one keyword **AND** at least
-  one tag (i.e. `AND` between name and tag criteria)
+* **Combined search:** If multiple conditions are provided, persons must match at least one keyword in each condition (i.e. `AND` between conditions)
+    * For example, `find n/alex n/bernice e/alexyeoh e/berniceyu` will match the following users:
+      * Name: `Alex Yeoh`, Email: `alexyeoh@example.com` (matches `n/alex` and `e/alexyeoh` only)
+      * Name: `Bernice Yu`, Email: `berniceyu@example.com` (matches `n/bernice` and `e/berniceyu` only)
 
 
 **Examples:**
