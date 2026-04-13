@@ -658,7 +658,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ---
 
-**Use case: UC07 - see command instructions**
+**Use case: UC06 - see command instructions**
 
 **MSS**
 
@@ -683,7 +683,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
       Use case resumes at step 1.
 
-**Use case: UC08 – Add availability to a teaching staff member**
+**Use case: UC07 – Add availability to a teaching staff member**
 
 **MSS**
 
@@ -719,7 +719,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ---
 
-**Use case: UC09 – View tutor availability dashboard**
+**Use case: UC08 – View tutor availability dashboard**
 
 **MSS**
 
