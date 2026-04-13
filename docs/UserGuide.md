@@ -49,7 +49,7 @@ fast, Doritus can get your contact management tasks done faster than traditional
 
     * `delete 3` : Deletes the 3rd person shown in the current list (works for both students and staff).
 
-    * `export` : Exports all contacts to a CSV file.
+    * `export` : Exports all contacts currently listed to a CSV file.
 
     * `import` : Imports contacts from a CSV file.
 
@@ -184,14 +184,14 @@ Adds a teaching staff (tutor) to the address book.
   * Constraints for names:
     * Use only letters, numbers, and symbols: `/`, `,`, `-`, `'`, `(` and `)`
     * Cannot be empty or only whitespace.
-    * Use only a single space or hyphen between words. 
-    * Must only start and end with alphanumeric character, i.e, no trailing non-alphanumeric characters. 
+    * Use only a single space or hyphen between words.
+    * Must only start and end with alphanumeric character, i.e, no trailing non-alphanumeric characters.
     * Parentheses must be at the end, properly ordered, i.e, open bracket `(` must always be followed with close bracket `)`, and non-empty.
   * Valid Examples:
-    * John Doe 
-    * David, Tan Ah Khow 
-    * Lily-Rose 
-    * Ronald O'Donald 
+    * John Doe
+    * David, Tan Ah Khow
+    * Lily-Rose
+    * Ronald O'Donald
     * Soh La Min (Su La Min)
     * Child S/O Father
 * `p/`, `e/`, `u/`: Required.
@@ -490,6 +490,7 @@ Exports all contacts currently listed in the address book to a CSV file. This al
 
 * Exports all contacts currently listed (both students and teaching staff) in the current address book to a CSV file.
 * If the file already exists, it will be overwritten.
+* If the directory of the target files does not exist, Doritus will create the directory recursively
 * The CSV file includes contact details such as name, phone, email, username, position, and tags.
 
 **Examples:**
