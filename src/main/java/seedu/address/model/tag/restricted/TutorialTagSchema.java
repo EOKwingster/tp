@@ -13,7 +13,7 @@ public class TutorialTagSchema extends RegexTagSchema {
     public static final String MESSAGE_CONSTRAINTS = "Tutorial tag expects format of an optional uppercase letter "
             + "followed by maximum 2 numbers.\nOPTIONAL: an associated course is attachable at the end "
             + "with a dash (-). " + CourseTagSchema.MESSAGE_CONSTRAINTS + "\n"
-            + "Valid tutorial: 'D24-CS2103T' and '8'";
+            + "Valid tutorial (example): 'D24-CS2103T' and '8'";
 
     /**
      * Constructs a {@code TutorialTagSchema}.
