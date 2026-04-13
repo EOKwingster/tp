@@ -235,6 +235,13 @@ Either variant of tag can be constructed using `TagFactory.create(tag)`. Which o
   3. `RestrictedTag`'s constructor will pass `value` into the schema to check against its own specified validation method
   4. Should validation fail, an error is thrown
 
+#### Tutorial/Lab Tag Design Rationale
+- Tutorial and Lab tags optionally allow a course to be associated with these tags. (so `tut:A13` is distinct from `tut:A13-CS2103`)
+    - Reasoning: We leave the choice of convention to the user. For example, if they mainly teach CS1231S, they could decide that the one without the course marker is from their main course (so that it is easier to spot).
+- A `course` tag does not have to already be attached to the person
+    - We prioritise user flexibility over strict enforcement.
+    - Reasoning: The course suffix is mainly for contextual metadata. For example, a user may wish to disambiguate two tutorial groups by attaching a course identifier, but does not want the additional course tag cluttering the tag list.
+
 ### Tutor Availability Scheduling
 
 #### Overview
@@ -889,10 +896,10 @@ testers are expected to do more *exploratory* testing.
 Prerequisites: At least 1 person exists in the displayed list
 
 1. Add valid tag
-    1. Test case: `tag-add 1 friend course:CS2103T`
+    1. Test case: `tag-add 1 t/friend t/course:CS2103T`
         Expected: the tags `friend` and `course:CS2103T` will be added to the existing list of tags for the person located at index `1`. The course tag is colour-coded and will appear before `friend`.
 2. Reject invalid tag
-    1. Test case: `tag-add frie,nd`
+    1. Test case: `tag-add t/frie,nd`
         Expected: Command fails, explaining that the provided tag's format only accepts alphanumeric characters
-    2. Test case: `tag-add course:CS2103TTT`
+    2. Test case: `tag-add t/course:CS2103TTT`
         Expected: Command fails, explaining that the provided tag's format is invalid and provides the allowed syntax for course

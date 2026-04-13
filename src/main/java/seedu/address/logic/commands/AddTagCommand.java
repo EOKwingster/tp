@@ -27,11 +27,11 @@ public class AddTagCommand extends Command {
         + ": Attaches a tag to a person within the address book. "
         + "Parameters: "
         + "INDEX "
-        + "[" + PREFIX_TAG + "TAG]...\n"
+        + PREFIX_TAG + "TAG [" + PREFIX_TAG + "TAG]...\n"
         + "Example: " + COMMAND_WORD + " "
         + "3 "
         + PREFIX_TAG + "friends "
-        + PREFIX_TAG + "owesMoney";
+        + PREFIX_TAG + "course:CS2103T";
     //@formatter:on
 
     public static final String MESSAGE_ADD_SUCCESS = "Successfully added tag(s) to Person: %1$s";
