@@ -1,6 +1,6 @@
 package seedu.address.logic.commands;
 
-import static seedu.address.logic.Messages.MESSAGE_INVALID_PARAMETER_NUMBER;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_ARGUMENT_NUMBER;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ public class NullaryCommandTest {
     private final AddressBookParser parser = new AddressBookParser();
 
     private static String expectedError(String commandWord) {
-        return String.format(MESSAGE_INVALID_PARAMETER_NUMBER, commandWord, 0);
+        return String.format(MESSAGE_INVALID_ARGUMENT_NUMBER, commandWord, 0);
     }
 
     @Test
