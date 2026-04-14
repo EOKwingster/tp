@@ -1,5 +1,6 @@
 package seedu.address.logic.parser;
 
+import static seedu.address.logic.Messages.MESSAGE_INVALID_ARGUMENT_NUMBER;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 
@@ -22,6 +23,7 @@ import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ImportCommand;
 import seedu.address.logic.commands.ListCommand;
+import seedu.address.logic.commands.NullaryCommand;
 import seedu.address.logic.commands.RequireConfirmationCommand;
 import seedu.address.logic.commands.StaffListCommand;
 import seedu.address.logic.commands.StudentListCommand;
@@ -62,6 +64,10 @@ public class AddressBookParser {
         logger.fine("Command word: " + commandWord + "; Arguments: " + arguments);
 
         Command command = parseCommandWord(commandWord, arguments, userInput);
+
+        if (command instanceof NullaryCommand && arguments != null && !arguments.isEmpty()) {
+            throw new ParseException(String.format(MESSAGE_INVALID_ARGUMENT_NUMBER, commandWord, 0));
+        }
 
         if (command instanceof CriticalCommand) {
             return new RequireConfirmationCommand(userInput, command);

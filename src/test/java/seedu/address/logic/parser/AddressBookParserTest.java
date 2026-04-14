@@ -71,9 +71,6 @@ public class AddressBookParserTest {
         Command command = parser.parseCommand(ClearCommand.COMMAND_WORD);
         assertTrue(command instanceof RequireConfirmationCommand);
         assertTrue(((RequireConfirmationCommand) command).getPendingCommand() instanceof ClearCommand);
-        command = parser.parseCommand(ClearCommand.COMMAND_WORD + " 3");
-        assertTrue(command instanceof RequireConfirmationCommand);
-        assertTrue(((RequireConfirmationCommand) command).getPendingCommand() instanceof ClearCommand);
     }
 
     @Test
@@ -96,7 +93,6 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_exit() throws Exception {
         assertTrue(parser.parseCommand(ExitCommand.COMMAND_WORD) instanceof ExitCommand);
-        assertTrue(parser.parseCommand(ExitCommand.COMMAND_WORD + " 3") instanceof ExitCommand);
     }
 
     @Test
@@ -121,27 +117,21 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_help() throws Exception {
         assertTrue(parser.parseCommand(HelpCommand.COMMAND_WORD) instanceof HelpCommand);
-        assertTrue(parser.parseCommand(HelpCommand.COMMAND_WORD + " 3") instanceof HelpCommand);
     }
 
     @Test
     public void parseCommand_list() throws Exception {
         assertTrue(parser.parseCommand(ListCommand.COMMAND_WORD) instanceof ListCommand);
-        assertTrue(parser.parseCommand(ListCommand.COMMAND_WORD + " 3") instanceof ListCommand);
     }
 
     @Test
     public void parseCommand_staffslist() throws Exception {
         assertTrue(parser.parseCommand(StaffListCommand.COMMAND_WORD) instanceof StaffListCommand);
-        assertTrue(parser.parseCommand(StaffListCommand.COMMAND_WORD + " 1") instanceof StaffListCommand);
     }
 
     @Test
     public void parseCommand_studentslist() throws Exception {
         assertTrue(parser.parseCommand(StudentListCommand.COMMAND_WORD) instanceof StudentListCommand);
-        assertTrue(parser.parseCommand(StudentListCommand.COMMAND_WORD + " 2") instanceof StudentListCommand);
-        assertTrue(parser.parseCommand(StudentListCommand.COMMAND_WORD + " ??? extra-input")
-                instanceof StudentListCommand);
     }
 
     @Test
@@ -164,8 +154,6 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_tutordashboard() throws Exception {
         assertTrue(parser.parseCommand(TutorDashboardCommand.COMMAND_WORD) instanceof TutorDashboardCommand);
-        assertTrue(parser.parseCommand(TutorDashboardCommand.COMMAND_WORD + " foo")
-                instanceof TutorDashboardCommand);
     }
 
     @Test
