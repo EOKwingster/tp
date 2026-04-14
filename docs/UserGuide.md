@@ -124,7 +124,8 @@ The `up` and `down` arrow keys can be used to navigate previously entered comman
 
 **Behavior:**
 
-* Only past commands that were successfully executed (did not provide an error) will be accessible
+* Only past commands that were successfully executed (did not produce an error) will be accessible.
+* Only **100** of the most recent successfully executed commands are stored in the history at a time.
 
 ### Viewing help : `help`
 
