@@ -1,0 +1,30 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class CsvPersonDeserialiser {
+    - personCsvRep: String
+    + CsvPersonDeserialiser(personCsvRep: String)
+    + deserialise(): Person
+    - deserialiseStudent(): Person
+    - deserialiseStaff(rawPos: String): TeachingStaff
+    - deserialisePositionFromStrRep(positionStrRep: String): Position
+    - deserialiseName(): Name
+    - deserialisePhone(): Phone
+    - deserialiseUsername(): Username
+    - deserialiseEmail(): Email
+    - deserialiseTags(): Set<AbstractTag>
+    - deserialiseAvailability(): Set<TimeSlot>
+}
+
+class SubstringStream {
+    + SubstringStream(input: String)
+    + isExhausted(): boolean
+    + nextSubstringUntil(delimiter: String): String
+}
+
+CsvPersonDeserialiser *-- "1" SubstringStream
+
+class DeserialisePersonException
+
+CsvPersonDeserialiser ..> DeserialisePersonException : throws >
+@enduml

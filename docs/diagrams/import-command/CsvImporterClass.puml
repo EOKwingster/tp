@@ -1,20 +1,8 @@
 @startuml
-hide circle
 skinparam classAttributeIconSize 0
 
 class CsvImporter {
     + {static} importContacts(Model, String): void
-    + {static} deserialisePerson(String): Person
-    - {static} extractPositionStr(Iterator<String>, String): String
-    - {static} deserialiseStudent(Iterator<String>, String): Person
-    - {static} deserialiseStaff(Iterator<String>, String, String): TeachingStaff
-    - {static} deserialisePositionFromStrRep(String, String): Position
-    - {static} deserialiseName(Iterator<String>, String): Name
-    - {static} deserialisePhone(Iterator<String>, String): Phone
-    - {static} deserialiseUsername(Iterator<String>, String): Username
-    - {static} deserialiseEmail(Iterator<String>, String): Email
-    - {static} deserialiseTags(Iterator<String>, String): Set<AbstractTag>
-    - {static} deserialiseAvailability(Iterator<String>, String): Set<TimeSlot>
 }
 
 CsvImporter ..> IOException : throws >

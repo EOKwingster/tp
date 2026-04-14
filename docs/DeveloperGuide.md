@@ -401,8 +401,10 @@ The feature is implemented across the following components:
 
 * `CsvImporter` — Utility class responsible for:
     1. Reading from the csv file containing all the contacts.
-    2. Converting each CSV formatted string (representing a person) into a `Person` via
-       `CsvImporter#deserialisePerson(personStrRep)`
+    2. Adds all deserialised `Person` into the  model. Uses `CsvPersonDeserialiser#deserialise(personStrRep)` to deserialise each csv row representing a person.
+
+* `CsvPersonDeserialiser` - Utility class responsible for:
+    1. Deserialising a csv representation string of a `Person` into a `Person` object.
 
 **Command Format:**
 
@@ -412,15 +414,15 @@ The feature is implemented across the following components:
 
 **Aspect: Where to place import logic**
 
-* **Alternative 1 (current choice):** Place import logic in `CsvImporter` utility class in the storage component.
-    * Pros: Able to test the logic for deserialisation and import easily and separately from the command execution.
-    * Cons: Storage component contains deserialisation logic which is outside the scope of responsibilities of the
+* **Alternative 1 (current choice):** Place import logic in `CsvImporter` and `CsvPersonDeserialiser` utility classes in the storage component.
+    * Pros: Able to test the logic for deserialisation and import easily and separately from the command execution and separately from each other.
+    * Cons: Storage component contains deserialisation logic which is slightly out the scope of responsibilities of the
       storage
       component.
 
 * **Alternative 2:** Place all import logic in `ImportCommand`.
     * Pros: The logic is contained within a single class, making it easy to read and understand.
-    * Cons: Difficult to test deserialisation logic separately.
+    * Cons: Difficult to isolate testing of deserialisation logic separately.
 
 ### Double Confirmation
 
